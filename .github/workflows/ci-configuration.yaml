@@ -24,4 +24,4 @@ jobs:
     - name: Run unittests
       run: |
         cd unit_tests
-        python -m unittest discover -s .
+        python -m unittest discover -s . -v
