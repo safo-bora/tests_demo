@@ -2,24 +2,33 @@ pipeline {
     agent any
 
     stages {
+        stage('Prepare Environment') {
+            steps {
+                echo 'Updating apt repositories and installing Python pip...'
+                script {
+                    // Update apt repositories
+                    sh 'sudo apt-get update'
+                    // Install Python3 and pip for Python3
+                    sh 'sudo apt-get install -y python3 python3-pip'
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'echo "brew install python3 && python3 -m pip install --user -r requirements.txt" | zsh'
+                    // Print the current working directory
+                    sh 'pwd'
+                    // List files in the current working directory
+                    sh 'ls -la'
+                    // Install Python dependencies from requirements.txt
+                    sh 'python3 -m pip install -r requirements.txt'
                 }
             }
         }
     }
-
-    post {
-        success {
-            echo 'Dependencies installed successfully.'
-        }
-        failure {
-            echo 'Failed to install dependencies. Please check the logs for details.'
-        }
-    }
 }
+
 
 
