@@ -2,11 +2,21 @@ pipeline {
     agent { label 'agent-mac' }
 
     stages {
+        stage('Setup Virtual Environment') {
+            steps {
+                echo 'Setting up virtual environment...'
+                script {
+                    sh 'python3 -m venv myenv'
+                    sh 'source myenv/bin/activate'
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'pwd && ls -la && pip install -r requirements.txt'
+                    sh 'pip install -r requirements.txt'
                 }
             }
         }
@@ -16,7 +26,7 @@ pipeline {
                 script {
                     sh '''
                     cd unit_tests
-                    python -m unittest discover -s . -v
+                    python3 -m unittest discover -s . -v
                     '''
                 }
             }
