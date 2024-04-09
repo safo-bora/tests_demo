@@ -1,5 +1,5 @@
 pipeline {
-    agent agent-mac
+    agent { label 'agent-mac' }
 
     stages {
         stage('Install Dependencies') {
