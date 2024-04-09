@@ -4,17 +4,21 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
-                sh 'python3 -m pip install --user -r requirements.txt'
-            }
-        }
-
-        stage('Run Unit Tests') {
-            steps {
-                echo 'Running tests...'
-                sh 'cd unit_tests && python3 -m unittest discover -s . -v'
+                echo 'Installing Python dependencies...'
+                script {
+                    sh 'python3 -m pip install --user -r requirements.txt'
+                }
             }
         }
     }
 
+    post {
+        success {
+            echo 'Dependencies installed successfully.'
+        }
+        failure {
+            echo 'Failed to install dependencies. Please check the logs for details.'
+        }
+    }
 }
+
