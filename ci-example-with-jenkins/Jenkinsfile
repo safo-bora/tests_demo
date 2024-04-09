@@ -18,14 +18,14 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'pip3 install -r requirements.txt'
+                sh 'python3 -m pip install --user -r requirements.txt'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
                 echo 'Running tests...'
-                sh 'cd unit_tests && python3 -m unittest discover -s .'
+                sh 'cd unit_tests && python3 -m unittest discover -s . -v'
             }
         }
     }
