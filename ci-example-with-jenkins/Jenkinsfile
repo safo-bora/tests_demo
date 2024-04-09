@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'sw_vers'
+                    sh 'uname -a'
                     sh 'pwd'
                     sh 'ls -la'
                     sh 'pip install -r requirements.txt"'
