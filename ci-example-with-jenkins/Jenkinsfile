@@ -2,18 +2,11 @@ pipeline {
     agent { label 'agent-mac' }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'python3 -m pip install --upgrade pip'
-                    sh 'pip install -r requirements.txt'
+                    sh 'pwd && ls -la && pip install -r requirements.txt'
                 }
             }
         }
