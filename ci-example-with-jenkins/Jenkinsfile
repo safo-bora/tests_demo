@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'pip install -r requirements.txt'
+                    sh '${WORKSPACE}/myenv/bin/pip install -r requirements.txt'
                 }
             }
         }
