@@ -1,9 +1,9 @@
-name: Python Unittest Workflow
+name: Run Unit Testing
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  unit-testing:
 
     runs-on: ubuntu-latest
 
