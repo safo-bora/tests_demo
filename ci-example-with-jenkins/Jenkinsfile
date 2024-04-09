@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepare') {
+            steps {
+                echo 'Preparing the environment...'
+                script {
+                    // Define the Python versions you want to test against
+                    def pythonVersions = ['3.8', '3.9', '3.10', "3.11", "3.12"]
+                    for (pyVer in pythonVersions) {
+                        echo "Setting up Python ${pyVer}"
+                    }
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'python -m pip install --upgrade pip'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                echo 'Running tests...'
+                sh 'cd unit_tests && python -m unittest discover -s .'
+            }
+        }
+    }
+
+}
