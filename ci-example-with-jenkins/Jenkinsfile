@@ -12,14 +12,15 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing Python dependencies...'
-                script {
-                    sh '${WORKSPACE}/myenv/bin/pip install -r requirements.txt'
-                }
+    stage('Install Dependencies') {
+        steps {
+            echo 'Installing Python dependencies...'
+            script {
+                // Provide the full path to pip executable within the virtual environment
+                sh "${WORKSPACE}/myenv/bin/pip install -r requirements.txt"
             }
         }
+    }
 
         stage('Run Unit Tests') {
             steps {
