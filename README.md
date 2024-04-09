@@ -1,2 +1,2 @@
-# tests_demo
-Tests demo project to experiments CI integration 
+# Test Project 
+Tests demo project to experiments CI integration and test pyramid
