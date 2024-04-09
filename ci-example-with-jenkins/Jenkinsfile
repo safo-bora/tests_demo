@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Installing Python dependencies...'
                 script {
-                    sh 'brew install python3 && python3 -m pip install --user -r requirements.txt'
+                    sh 'echo "brew install python3 && python3 -m pip install --user -r requirements.txt" | zsh'
                 }
             }
         }
@@ -21,4 +21,5 @@ pipeline {
         }
     }
 }
+
 
