@@ -2,38 +2,32 @@ pipeline {
     agent { label 'agent-mac' }
 
     stages {
-        stage('Setup Virtual Environment') {
-            steps {
-                echo 'Setting up virtual environment...'
-                script {
-                    sh 'python3 -m venv myenv'
-                    sh 'source myenv/bin/activate'
+        stage('Run Tests Across Python Versions') {
+            matrix {
+                axes {
+                    axis {
+                        name 'PYTHON_VERSION'
+                        values 'python3.11', 'python3.12'
+                    }
                 }
-            }
-        }
-
-    stage('Install Dependencies') {
-        steps {
-            echo 'Installing Python dependencies...'
-            script {
-                // Provide the full path to pip executable within the virtual environment
-                sh "${WORKSPACE}/myenv/bin/pip install -r requirements.txt"
-            }
-        }
-    }
-
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    sh '''
-                    cd unit_tests
-                    python3 -m unittest discover -s . -v
-                    '''
+                stages {
+                    stage('Setup and Test') {
+                        steps {
+                            echo "Setting up virtual environment with ${PYTHON_VERSION}..."
+                            script {
+                                // Creating a virtual environment with the specified Python version
+                                sh "${PYTHON_VERSION} -m venv myenv-${PYTHON_VERSION}"
+                                sh "source myenv-${PYTHON_VERSION}/bin/activate"
+                                sh "${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/pip install -r requirements.txt"
+                                sh '''
+                                    cd unit_tests
+                                    ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/python -m unittest discover -s . -v
+                                '''
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-
-
