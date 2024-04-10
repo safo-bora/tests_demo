@@ -21,7 +21,7 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(multiply(0, 10), 0)
 
     def test_divide(self):
-        self.assertEqual(divide(10, 2), 5)
+        self.assertEqual(divide(10, 2), 500)
         self.assertEqual(divide(-1, 1), -1)
         self.assertEqual(divide(-1, -1), 1)
         self.assertEqual(divide(5, 2), 2.5)
