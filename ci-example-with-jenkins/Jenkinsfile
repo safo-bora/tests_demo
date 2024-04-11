@@ -24,7 +24,6 @@ pipeline {
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/pip install -r requirements.txt
 
                                 # Run tests using nose2
-                                cd unit_tests
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v
                                 """
                             }
