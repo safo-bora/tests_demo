@@ -23,9 +23,9 @@ pipeline {
                                 # Install dependencies
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/pip install -r requirements.txt
 
-                                # Run tests using nose2 and generate the XML report
+                                # Run tests using nose2
                                 cd unit_tests
-                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v --junit-xml-path=${WORKSPACE}/test-reports/reports-${PYTHON_VERSION}.xml
+                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v
                                 """
                             }
                         }
