@@ -23,7 +23,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run unittests with nose2
       run: |
-        cd unit_tests
         nose2 -v
         pwd
         ls -la
