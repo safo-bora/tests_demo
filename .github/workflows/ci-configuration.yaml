@@ -24,9 +24,9 @@ jobs:
     - name: Run unittests with nose2
       run: |
         cd unit_tests
-        nose2 -v --junit-xml-path=reports.xml
+        nose2 -v
     - name: Upload Test Report
       uses: actions/upload-artifact@v2
       with:
         name: Test-Reports
-        path: unit_tests/reports.xml
+        path: unit_tests/*.xml

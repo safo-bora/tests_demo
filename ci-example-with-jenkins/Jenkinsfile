@@ -25,7 +25,7 @@ pipeline {
 
                                 # Run tests using nose2
                                 cd unit_tests
-                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v --junit-xml-path=reports.xml
+                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v
                                 """
                             }
                         }
