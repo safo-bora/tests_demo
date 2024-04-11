@@ -25,8 +25,10 @@ jobs:
       run: |
         cd unit_tests
         nose2 -v
+        pwd
+        ls -la
     - name: Upload Test Report
       uses: actions/upload-artifact@v2
       with:
         name: Test-Reports
-        path: unit_tests/test-reports/
+        path: unit_tests/test-reports/*
