@@ -28,19 +28,9 @@ jobs:
       with:
         name: Test-Reports-and-Logs
         path: reports
-    - name: Test Summary
-      uses: test-summary/action@v2
-      with:
-        paths: "reports/*.xml"
-        output: test-summary.md
-      if: always()
-    - name: Upload test summary
+    - name: Test Reporter
       uses: actions/upload-artifact@v3
+      if: success() || failure()
       with:
-        name: test-summary
-        path: test-summary.md
-      if: always()
-    - name: DEBUG CI
-      run:   | 
-         pwd $$ ls -la && cd "reports"
-         pwd && ls -la
+        name: reports
+        path: junit.xml
