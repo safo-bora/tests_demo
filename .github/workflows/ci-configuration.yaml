@@ -33,4 +33,4 @@ jobs:
       if: success() || failure()
       with:
         name: reports
-        path: junit-report.xml
+        path: reports/junit-report.xml
