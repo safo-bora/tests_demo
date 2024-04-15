@@ -12,7 +12,7 @@ jobs:
         python-version: [3.11, 3.12]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -24,12 +24,12 @@ jobs:
     - name: Run unittests with nose2
       run: nose2 -v
     - name: Upload Test Reports and Logs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: Test-Reports-and-Logs
         path: reports
     - name: Test Summary
-      uses: test-summary/action@v4
+      uses: test-summary/action@v2
       with:
         paths: "reports/**/*.xml"
       if: always()
