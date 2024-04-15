@@ -27,4 +27,12 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Test-Reports
-        path: junit-report.xml
+        path: |
+          junit-report.xml
+          html-report.html
+
+    - name: Upload Log File
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log-File
+        path: unit_tests/test.log
