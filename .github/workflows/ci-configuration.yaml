@@ -23,14 +23,15 @@ jobs:
         pip install -r requirements.txt
     - name: Run unittests with nose2
       run: nose2 -v
-#    - name: Upload Test Reports and Logs
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: Test-Reports-and-Logs
-#        path: reports
-    - name: Test Reporter
-      uses: actions/upload-artifact@v3
-      if: success() || failure()
+    - name: Test Summary
+      uses: test-summary/action@v2
       with:
-        name: reports
-        path: reports/junit-report.xml
+        paths: "reports/**/*.xml"
+        output: test-summary.md
+      if: always()
+    - name: Upload test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary
+        path: test-summary.md
+      if: always()
