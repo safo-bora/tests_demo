@@ -29,17 +29,8 @@ jobs:
 #        path: reports
 #      if: always()
     - name: Publish Test Results
-      uses: dorny/test-reporter@v1
-      if: always()  # Ensure this step runs even if the previous steps fail
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
       with:
-        name: Unit Test Results
-        path: 'reports/junit-report.xml'
-        reporter: 'github-check' # Use github-check, github-pr-review, or github-pr-check
-
-    - name: Upload Test Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: Test-Reports
-        path: |
-          *.xml
-          *.html
+        files: |
+          reports/*.xml
