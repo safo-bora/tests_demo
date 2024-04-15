@@ -28,16 +28,18 @@ jobs:
       with:
         name: Test-Reports-and-Logs
         path: reports
-    - name: Create test summary
+    - name: Test Summary
       uses: test-summary/action@v2
       with:
-        paths: reports/*.xml
-        output: reports/results.html
+        paths: "reports/*.xml"
+        output: test-summary.md
+      if: always()
     - name: Upload test summary
       uses: actions/upload-artifact@v3
       with:
         name: test-summary
-        path: reports/results.html
+        path: test-summary.md
+      if: always()
     - name: DEBUG CI
       run:   | 
          pwd $$ ls -la && cd "reports"
