@@ -34,7 +34,9 @@ jobs:
         paths: "reports/*.xml"
       if: always()
     - name: DEBUG CI
-      run: pwd $$ ls -la && cd reports $$ pwd && ls -la
+      run:   | 
+         pwd $$ ls -la && cd "reports"
+         pwd && ls -la
     - name: Upload test summary
       uses: actions/upload-artifact@v3
       with:
