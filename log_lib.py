@@ -1,11 +1,23 @@
 import logging
+import os
+
+log_directory = "reports"
+log_file = "test.log"
+
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+    print(f"Directory '{log_directory}' was created.")
+else:
+    print(f"Directory '{log_directory}' already exists.")
+
 
 # Create a custom logger
 logger = logging.getLogger('TestLogger')
 logger.setLevel(logging.DEBUG)
 
 # Create handlers
-f_handler = logging.FileHandler('test.log')
+log_path = os.path.join(log_directory, log_file)
+f_handler = logging.FileHandler(log_path)
 f_handler.setLevel(logging.DEBUG)
 
 # Create formatters and add it to handlers

@@ -27,11 +27,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Test-Reports-and-Logs
-        path: |
-          *.xml
-          *.html
-          *.log
-
+        path: reports
     - name: Display links to Artifacts
       run: |
         echo "You can download the Test Reports and Logs from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
