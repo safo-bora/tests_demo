@@ -1,1 +1,2 @@
 nose2==0.14.1
+nose2-html-report==0.6.0
