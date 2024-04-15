@@ -33,6 +33,12 @@ jobs:
       with:
         paths: "reports/*.xml"
       if: always()
+    - name: Upload test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary
+        path: test-summary.md
+      if: always()
     - name: Display links to Artifacts
       run: |
         echo "You can download the Test Reports and Logs from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
