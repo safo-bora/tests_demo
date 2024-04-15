@@ -3,8 +3,10 @@ name: Run Unit Testing
 on: [push, pull_request]
 
 permissions:
-  checks: write
   contents: read
+  issues: read
+  checks: write
+  pull-requests: write
 
 jobs:
   unit-testing:
@@ -27,12 +29,12 @@ jobs:
         pip install -r requirements.txt
     - name: Run unittests with nose2
       run: nose2 -v
-#    - name: Upload test reports
-#      uses: actions/upload-artifact@v3
-#      with:
-#        path: reports
-#      if: always()
-    - name: Publish Test Results
+    - name: Upload test reports
+      uses: actions/upload-artifact@v3
+      with:
+        path: reports
+      if: always()
+    - name: Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
