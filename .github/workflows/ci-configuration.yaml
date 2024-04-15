@@ -28,21 +28,16 @@ jobs:
       with:
         name: Test-Reports-and-Logs
         path: reports
-    - name: Test Summary
-      uses: test-summary/action@v2
+    - name: Create test summary
       with:
-        paths: "reports/*.xml"
-      if: always()
-    - name: DEBUG CI
-      run:   | 
-         pwd $$ ls -la && cd "reports"
-         pwd && ls -la
+        paths: reports/*.xml
+        output: reports/results.html
     - name: Upload test summary
       uses: actions/upload-artifact@v3
       with:
         name: test-summary
-        path: test-summary.md
-      if: always()
-    - name: Display links to Artifacts
-      run: |
-        echo "You can download the Test Reports and Logs from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
+        path: reports/results.html
+    - name: DEBUG CI
+      run:   | 
+         pwd $$ ls -la && cd "reports"
+         pwd && ls -la
