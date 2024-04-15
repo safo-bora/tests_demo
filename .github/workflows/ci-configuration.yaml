@@ -23,21 +23,15 @@ jobs:
         pip install -r requirements.txt
     - name: Run unittests with nose2
       run: nose2 -v
-    - name: Upload Test Report
+    - name: Upload Test Reports and Logs
       uses: actions/upload-artifact@v2
       with:
-        name: Test-Reports
+        name: Test-Reports-and-Logs
         path: |
-          junit-report.xml
-          html-report.html
-
-    - name: Upload Log File
-      uses: actions/upload-artifact@v2
-      with:
-        name: Log-File
-        path: test.log
+          *.xml
+          *.html
+          *.log
 
     - name: Display links to Artifacts
       run: |
-        echo "You can download the Test Reports from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        echo "You can download the Log File from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        echo "You can download the Test Reports and Logs from: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
