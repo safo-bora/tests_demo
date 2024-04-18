@@ -2,6 +2,7 @@
 
 [![Run Unit Testing](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml/badge.svg?branch=main)](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml)
 
+
 [![Coverage Status](https://coveralls.io/repos/github/safo-bora/tests_demo/badge.svg?branch=main)](https://coveralls.io/github/safo-bora/tests_demo?branch=main)
 
 
