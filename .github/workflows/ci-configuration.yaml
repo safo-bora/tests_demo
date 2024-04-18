@@ -32,6 +32,8 @@ jobs:
       run: |
         nose2 -v --with-coverage
         coverage html -d coverage_html  # Generate HTML coverage report
+        pwd
+        ls -la
 
     - name: Upload HTML coverage report
       uses: actions/upload-artifact@v3
