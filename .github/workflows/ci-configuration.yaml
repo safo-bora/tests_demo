@@ -44,15 +44,9 @@ jobs:
           path: reports/
         if: always()
 
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.2.0
+      - name: Publish Coverage Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          filename: coverage.xml
-          badge: true
-          fail_below_min: true
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: true
-          indicators: true
-          output: both
-          thresholds: '60 80'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .  # Publish from the root directory
+          publish_branch: ${{ github.ref_slug }}
