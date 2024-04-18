@@ -45,41 +45,7 @@ jobs:
         if: always()
 
       - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+        uses: irongut/CodeCoverageSummary@v1.2.0
         with:
           filename: coverage.xml
-
-  generate-badge:
-    runs-on: ubuntu-latest
-    needs: unit-testing
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install xmlstarlet
-        run: sudo apt-get install xmlstarlet
-
-      - name: Download coverage.xml artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: xml-coverage-report
-
-      - name: Extract coverage percentage
-        id: extract_coverage
-        run: |
-          pwd 
-          ls -la
-          COVERAGE=$(xmlstarlet sel -t -v "sum(//coverage/class/@line-rate)" coverage.xml)
-          echo "::set-output name=coverage::$COVERAGE"
-
-      - name: Generate badge
-        id: generate_badge
-        run: |
-          COVERAGE=${{ steps.extract_coverage.outputs.coverage }}
-          curl -s "https://img.shields.io/badge/Coverage-${COVERAGE}%25-green.svg" > coverage.svg
-
-      - name: Upload badge
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-badge
-          path: coverage.svg
+          badge: true
