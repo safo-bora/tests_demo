@@ -63,10 +63,14 @@ jobs:
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
 
-      - name: Debug COVERAGE_PERCENTAGE and COVERAGE
+      - name: Debug COVERAGE_NUMERIC
         run: |
-          echo "COVERAGE_PERCENTAGE: $COVERAGE_PERCENTAGE"
-          echo "COVERAGE: $COVERAGE"
+          echo "COVERAGE_NUMERIC: $COVERAGE_NUMERIC"
+
+      - name: Debug printf command
+        run: |
+          echo "printf command: printf "%.2f" "$COVERAGE_NUMERIC""
+
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
