@@ -31,19 +31,9 @@ jobs:
     - name: Run unittests with nose2 and generate coverage report
       run: |
         nose2 -v --with-coverage
-        coverage html -d coverage_html  # Generate HTML coverage report
+        coverage xml -o coverage.xml  # Generate XML coverage report
         pwd
         ls -la
-        cd coverage_html
-        pwd
-        ls -la
-
-    - name: Upload HTML coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: html-coverage-report
-        path: coverage_html/
-      if: always()
 
     - name: Upload XML coverage report
       uses: actions/upload-artifact@v3
