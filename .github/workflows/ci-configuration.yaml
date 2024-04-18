@@ -67,6 +67,8 @@ jobs:
       - name: Extract coverage percentage
         id: extract_coverage
         run: |
+          pwd 
+          ls -la
           COVERAGE=$(xmlstarlet sel -t -v "sum(//coverage/class/@line-rate)" coverage.xml)
           echo "::set-output name=coverage::$COVERAGE"
 
