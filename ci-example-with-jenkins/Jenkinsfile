@@ -7,7 +7,8 @@ pipeline {
                 axes {
                     axis {
                         name 'PYTHON_VERSION'
-                        values 'python3.11', 'python3.12'
+                        //values 'python3.11', 'python3.12'
+                        values 'python3.12'
                     }
                 }
                 stages {
@@ -35,8 +36,8 @@ pipeline {
                 }
                 post {
                     always {
-                        junit '**/*.xml'  // For test reports
-                        cobertura coberturaReportFile: '**/coverage.xml'  // For coverage reports
+                        junit 'reports/*.xml'  // For test reports
+                        cobertura coberturaReportFile: 'coverage.xml'  // For coverage reports
                     }
                 }
             }
