@@ -53,3 +53,29 @@ jobs:
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
         filename: coverage.xml
+  generate-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install jq (JSON processor)
+        run: sudo apt-get install jq
+
+      - name: Extract coverage percentage
+        id: extract_coverage
+        run: |
+          COVERAGE=$(jq -r '.coverage.summary[0].line_rate' coverage.json)
+          echo "::set-output name=coverage::$COVERAGE"
+
+      - name: Generate badge
+        id: generate_badge
+        run: |
+          COVERAGE=${{ steps.extract_coverage.outputs.coverage }}
+          curl -s "https://img.shields.io/badge/Coverage-${COVERAGE}%25-green.svg" > coverage.svg
+
+      - name: Upload badge
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-badge
+          path: coverage.svg
