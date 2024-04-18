@@ -37,10 +37,9 @@ jobs:
 
       - name: Set coverage output variable
         run: |
-          pwd
-          ls -la
+          cat coverage.json 
           COVERAGE=$(jq -r '.total.percent_covered' coverage.json)
-          echo "Extracted COVERAGE value: $COVERAGE" 
+          echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
           if [ -z "$COVERAGE" ]; then
             COVERAGE=0  # Set default value to 0 if coverage is not available
           fi
