@@ -38,7 +38,7 @@ jobs:
       - name: Set coverage output variable
         run: |
           cat coverage.json 
-          COVERAGE=$(jq -r '.total.percent_covered' coverage.json)
+          COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
           echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
           if [ -z "$COVERAGE" ]; then
             COVERAGE=0  # Set default value to 0 if coverage is not available
@@ -62,6 +62,7 @@ jobs:
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
+
 
 
       - name: Create Test Results badge
