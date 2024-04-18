@@ -52,10 +52,9 @@ jobs:
       with:
         files: reports/*.xml
 
-    # Optional: Use a coverage reporting tool/action
-#    - name: Publish Coverage Report
-#      uses: romeovs/lcov-reporter-action@v0.2.16
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#        lcov-file: ./coverage.xml
-#      if: success()
+    - name: Publish Coverage Report
+      uses: romeovs/lcov-reporter-action@v0.2.16
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        lcov-file: ./coverage.xml
+      if: success()
