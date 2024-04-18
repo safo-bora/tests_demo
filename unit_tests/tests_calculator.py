@@ -1,6 +1,6 @@
 import unittest
 from log_lib import logger
-from calculator_app import add, subtract, multiply, divide
+from app.calculator_app import add, subtract, multiply, divide
 
 
 class TestCalculator(unittest.TestCase):
@@ -10,11 +10,11 @@ class TestCalculator(unittest.TestCase):
 
     def setUp(self):
         """Log the start of a test."""
-        logger.info(f"Starting test: {self._testMethodName}")
+        logger.debug(f"Starting test: {self._testMethodName}")
 
     def tearDown(self):
         """Log the completion of a test."""
-        logger.info(f"Test completed: {self._testMethodName}")
+        logger.debug(f"Test completed: {self._testMethodName}")
 
     def test_add(self):
         """

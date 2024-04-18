@@ -23,8 +23,11 @@ pipeline {
                                 # Install dependencies
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/pip install -r requirements.txt
 
-                                # Run tests using nose2
-                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v
+                                # Run tests using nose2 with coverage
+                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v --with-coverage
+
+                                # Generate XML coverage report
+                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/coverage xml -o coverage.xml
                                 """
                             }
                         }
@@ -32,7 +35,8 @@ pipeline {
                 }
                 post {
                     always {
-                        junit '*.xml'
+                        junit '**/*.xml'  // For test reports
+                        cobertura coberturaReportFile: '**/coverage.xml'  // For coverage reports
                     }
                 }
             }

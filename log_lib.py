@@ -6,19 +6,19 @@ log_file = "test.log"
 
 if not os.path.exists(log_directory):
     os.makedirs(log_directory)
-    print(f"Directory '{log_directory}' was created.")
+    logging.info(f"Directory '{log_directory}' was created.")
 else:
-    print(f"Directory '{log_directory}' already exists.")
+    logging.info(f"Directory '{log_directory}' already exists.")
 
 
 # Create a custom logger
 logger = logging.getLogger('TestLogger')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # Create handlers
 log_path = os.path.join(log_directory, log_file)
 f_handler = logging.FileHandler(log_path)
-f_handler.setLevel(logging.DEBUG)
+f_handler.setLevel(logging.INFO)
 
 # Create formatters and add it to handlers
 f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
