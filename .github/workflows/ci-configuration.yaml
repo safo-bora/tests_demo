@@ -31,19 +31,27 @@ jobs:
     - name: Run unittests with nose2 and generate coverage report
       run: |
         nose2 -v --with-coverage
-        coverage xml -o coverage.xml
+        coverage html -d coverage_html  # Generate HTML coverage report
+
+    - name: Upload HTML coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-coverage-report
+        path: coverage_html/
+      if: always()
+
+    - name: Upload XML coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: xml-coverage-report
+        path: coverage.xml
+      if: always()
 
     - name: Upload test reports
       uses: actions/upload-artifact@v3
       with:
-        path: reports
-      if: always()
-
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: coverage.xml
+        name: test-reports
+        path: reports/
       if: always()
 
     - name: Unit Test Results
@@ -51,10 +59,3 @@ jobs:
       if: always()
       with:
         files: reports/*.xml
-
-#    - name: Publish Coverage Report
-#      uses: romeovs/lcov-reporter-action@v0.2.16
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#        lcov-file: coverage.xml
-#      if: success()
