@@ -36,7 +36,9 @@ jobs:
           files: "reports/*.xml"
 
       - name: Set coverage output variable
-        run: echo "COVERAGE=$(jq -r '.total.percent_covered' coverage.json)" >> $GITHUB_ENV
+        run: |
+          COVERAGE=$(jq -r '.total.percent_covered' coverage.json)
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
 
       - name: Set badge color based on coverage
         shell: bash
