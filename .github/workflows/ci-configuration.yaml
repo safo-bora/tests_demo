@@ -49,8 +49,7 @@ jobs:
         path: reports/
       if: always()
 
-    - name: Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        files: reports/*.xml
+        filename: coverage.xml
