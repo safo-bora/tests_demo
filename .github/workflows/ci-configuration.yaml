@@ -35,16 +35,13 @@ jobs:
         with:
           files: "reports/*.xml"
 
-      - name: Extract coverage percentage
-        id: extract_coverage
-        run: |
-          COVERAGE=$(jq -r ".total.percent_covered" coverage.json)
-          echo "::set-output name=coverage::$COVERAGE"
+      - name: Set coverage output variable
+        run: echo "COVERAGE=$(jq -r '.total.percent_covered' coverage.json)" >> $GITHUB_ENV
 
       - name: Set badge color based on coverage
         shell: bash
         run: |
-          COVERAGE_PERCENTAGE=$(printf "%.2f" "${{ steps.extract_coverage.outputs.coverage }}")
+          COVERAGE_PERCENTAGE=$(printf "%.2f" "${{ env.COVERAGE }}")
           if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
             echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
           else
@@ -63,7 +60,7 @@ jobs:
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
         with:
           label: Coverage
-          status: '${{ steps.extract_coverage.outputs.coverage }}%'
+          status: '${{ env.COVERAGE }}%'
           color: ${{ env.COVERAGE_BADGE_COLOR }}
           path: coverage-badge.svg
 
