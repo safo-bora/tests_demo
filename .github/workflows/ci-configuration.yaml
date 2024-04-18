@@ -34,6 +34,9 @@ jobs:
         coverage html -d coverage_html  # Generate HTML coverage report
         pwd
         ls -la
+        cd coverage_html
+        pwd
+        ls -la
 
     - name: Upload HTML coverage report
       uses: actions/upload-artifact@v3
