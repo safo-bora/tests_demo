@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           COVERAGE_PERCENTAGE=$(printf "%.2f" "${{ steps.extract_coverage.outputs.coverage }}")
-          if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
+          if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
             echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
@@ -68,7 +68,7 @@ jobs:
           color: ${{ env.COVERAGE_BADGE_COLOR }}
           path: coverage-badge.svg
 
-      - name: Upload badges to Gist
+      - name: Upload Test Results badge to Gist
         # Upload only for main branch here
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
@@ -77,7 +77,15 @@ jobs:
         with:
           token: ${{ secrets.GIST_TOKEN }}
           gistURL: https://gist.github.com/safo-bora/fb853667de7af0650ed9fe409f24ccf9
-          files: |
-            tests-badge.svg
-            coverage-badge.svg
+          file: tests-badge.svg
 
+      - name: Upload Coverage badge to Gist
+        # Upload only for main branch here
+        if: >
+          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gistURL: https://gist.github.com/safo-bora/fb853667de7af0650ed9fe409f24ccf9
+          file: coverage-badge.svg
