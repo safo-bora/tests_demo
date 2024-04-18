@@ -26,7 +26,7 @@ jobs:
       - name: Run unittests with nose2 and generate coverage report
         run: |
           nose2 -v --with-coverage
-          coverage xml -o coverage.xml  # Generate XML coverage report
+          coverage json -o coverage.json  # Generate JSON coverage report
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -34,12 +34,11 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
-      - name: Install xmlstarlet
-        run: sudo apt-get install xmlstarlet
+
       - name: Extract coverage percentage
         id: extract_coverage
         run: |
-          COVERAGE=$(xmlstarlet sel -t -v "sum(//coverage/class/@line-rate)" coverage.xml)
+          COVERAGE=$(jq -r ".total.percent_covered" coverage.json)
           echo "::set-output name=coverage::$COVERAGE"
 
       - name: Set badge color based on coverage
