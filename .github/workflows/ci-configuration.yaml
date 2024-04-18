@@ -34,7 +34,8 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
-
+      - name: Install xmlstarlet
+        run: sudo apt-get install xmlstarlet
       - name: Extract coverage percentage
         id: extract_coverage
         run: |
