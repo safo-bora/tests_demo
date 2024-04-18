@@ -61,11 +61,11 @@ jobs:
         # Upload only for master branch here
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'master' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/master'
+          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
         with:
           token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.githubusercontent.com/{user}/{id}
+          gistURL: https://gist.github.com/safo-bora/fb853667de7af0650ed9fe409f24ccf9
           file: badge.svg
 #      - name: Upload XML coverage report
 #        uses: actions/upload-artifact@v3
