@@ -49,7 +49,10 @@ jobs:
           echo "COVERAGE_PERCENTAGE before calculation: $COVERAGE_PERCENTAGE"
           echo "COVERAGE before calculation: $COVERAGE"
       
-          COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE")
+          # Extract the numeric value from COVERAGE
+          COVERAGE_NUMERIC=$(echo "$COVERAGE" | tr -d '"')
+      
+          COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
       
           # Debugging output
           echo "COVERAGE_PERCENTAGE after calculation: $COVERAGE_PERCENTAGE"
@@ -59,8 +62,6 @@ jobs:
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
-
-
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
