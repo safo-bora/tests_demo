@@ -45,10 +45,6 @@ jobs:
           fi
           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
       
-          # Debugging output
-          echo "COVERAGE_PERCENTAGE before calculation: $COVERAGE_PERCENTAGE"
-          echo "COVERAGE before calculation: $COVERAGE"
-      
           # Extract the numeric value from COVERAGE
           COVERAGE_NUMERIC=$(echo "$COVERAGE" | tr -d '"')
       
@@ -70,7 +66,6 @@ jobs:
       - name: Debug printf command
         run: |
           echo "printf command: printf "%.2f" "$COVERAGE_NUMERIC""
-
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
