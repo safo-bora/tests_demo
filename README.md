@@ -2,7 +2,8 @@
 
 [![Run Unit Testing](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml/badge.svg?branch=main)](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml)
 
-[![cov](https://safo-bora.github.io/tests_demo/badges/coverage.svg)](https://github.com/safo-bora/tests_demo/actions)
+[![Coverage Status](https://coveralls.io/repos/github/safo-bora/tests_demo/badge.svg?branch=main)](https://coveralls.io/github/safo-bora/tests_demo?branch=main)
+
 
 ## Tests demo project for experiments with CI integration and test reports
 

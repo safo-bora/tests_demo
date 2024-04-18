@@ -26,7 +26,7 @@ jobs:
       - name: Run unittests with nose2 and generate coverage report
         run: |
           nose2 -v --with-coverage
-          coverage json -o coverage.json
+          coverage xml -o coverage.xml  # Generate XML coverage report
 
       - name: Upload XML coverage report
         uses: actions/upload-artifact@v3
@@ -41,8 +41,8 @@ jobs:
           name: test-reports
           path: reports/
         if: always()
-      - name: Update Coverage Badge
-        # GitHub actions: default branch variable
-        # https://stackoverflow.com/questions/64781462/github-actions-default-branch-variable
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        uses: we-cli/coverage-badge-action@main
+
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: coveralls
