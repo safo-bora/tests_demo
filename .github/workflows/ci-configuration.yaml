@@ -42,7 +42,7 @@ jobs:
           path: reports/
         if: always()
 
-      - name: Upload coverage to Coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: coveralls
+#      - name: Upload coverage to Coveralls
+#        env:
+#          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+#        run: coveralls
