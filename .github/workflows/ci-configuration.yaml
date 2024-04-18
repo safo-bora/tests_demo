@@ -58,7 +58,7 @@ jobs:
           path: badge.svg
 
       - name: Upload badge to Gist
-        # Upload only for master branch
+        # Upload only for master branch here
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'master' ||
           github.event_name != 'workflow_run' && github.ref == 'refs/heads/master'
