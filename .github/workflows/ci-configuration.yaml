@@ -44,16 +44,22 @@ jobs:
             COVERAGE=0  # Set default value to 0 if coverage is not available
           fi
           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-
-      - name: Set badge color based on coverage
-        shell: bash
-        run: |
-          COVERAGE_PERCENTAGE=$(printf "%.2f" "${{ env.COVERAGE }}")
+      
+          # Debugging output
+          echo "COVERAGE_PERCENTAGE before calculation: $COVERAGE_PERCENTAGE"
+          echo "COVERAGE before calculation: $COVERAGE"
+      
+          COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE")
+      
+          # Debugging output
+          echo "COVERAGE_PERCENTAGE after calculation: $COVERAGE_PERCENTAGE"
+      
           if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
             echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
+
 
 
       - name: Create Test Results badge
