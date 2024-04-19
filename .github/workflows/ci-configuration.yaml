@@ -48,6 +48,7 @@ jobs:
           COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
       
           COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
+          echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_ENV
       
           # Debugging output
           echo "COVERAGE_PERCENTAGE after calculation: $COVERAGE_PERCENTAGE"
@@ -57,33 +58,13 @@ jobs:
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
-      - name: Debug tr command
-        run: |
-          echo "COVERAGE after tr command: $(echo "$COVERAGE" | tr -d '"')"
-
-      - name: Debug COVERAGE value
-        run: |
-          echo "COVERAGE value: $COVERAGE"
-
-      - name: Debug COVERAGE_NUMERIC
-        run: |
-          echo "COVERAGE_NUMERIC: $COVERAGE_NUMERIC"
-
-      - name: Debug printf command
-        run: |
-          echo "printf command: printf "%.2f" "$COVERAGE_NUMERIC""
-
-
-      - name: Debug printf command
-        run: |
-          echo "printf command: printf "%.2f" "$COVERAGE_NUMERIC""
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
         with:
           label: Tests
           status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
-          color: ${{ env.BADGE_COLOR }}
+          color: ${{ env.COVERAGE_BADGE_COLOR }}
           path: tests-badge.svg
 
       - name: Create Coverage badge
@@ -94,24 +75,15 @@ jobs:
           color: ${{ env.COVERAGE_BADGE_COLOR }}
           path: coverage-badge.svg
 
-      - name: Upload Test Results badge to Gist
-        # Upload only for main branch here
+      - name: Upload Badges to Gist
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
           github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
         with:
           token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fb853667de7af0650ed9fe409f24ccf9
-          file: tests-badge.svg
+          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+          files: |
+            tests-badge.svg
+            coverage-badge.svg
 
-      - name: Upload Coverage badge to Gist
-        # Upload only for main branch here
-        if: >
-          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fb853667de7af0650ed9fe409f24ccf9
-          file: coverage-badge.svg
