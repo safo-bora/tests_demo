@@ -59,9 +59,18 @@ jobs:
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
 
+      - name: Debug COVERAGE value
+        run: |
+          echo "COVERAGE value: $COVERAGE"
+
       - name: Debug COVERAGE_NUMERIC
         run: |
           echo "COVERAGE_NUMERIC: $COVERAGE_NUMERIC"
+
+      - name: Debug printf command
+        run: |
+          echo "printf command: printf "%.2f" "$COVERAGE_NUMERIC""
+
 
       - name: Debug printf command
         run: |
