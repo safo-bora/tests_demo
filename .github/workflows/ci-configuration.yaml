@@ -55,6 +55,7 @@ jobs:
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
+          echo "COVERAGE_BADGE_COLOR: $COVERAGE_BADGE_COLOR"
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
