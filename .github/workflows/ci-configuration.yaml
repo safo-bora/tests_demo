@@ -58,6 +58,9 @@ jobs:
           else
             echo "COVERAGE_BADGE_COLOR=brightgreen" >> $GITHUB_ENV
           fi
+      - name: Debug tr command
+        run: |
+          echo "COVERAGE after tr command: $(echo "$COVERAGE" | tr -d '"')"
 
       - name: Debug COVERAGE value
         run: |
