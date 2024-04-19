@@ -34,7 +34,6 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
-
       - name: Set coverage output variable
         run: |
           cat coverage.json 
@@ -45,8 +44,8 @@ jobs:
           fi
           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
       
-          # Extract the numeric value from COVERAGE
-          COVERAGE_NUMERIC=$(echo "$COVERAGE" | tr -d '"')
+          # Extract the numeric value from COVERAGE using sed
+          COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
       
           COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
       
