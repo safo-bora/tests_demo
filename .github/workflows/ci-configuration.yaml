@@ -134,18 +134,17 @@ jobs:
             STATUS="passed"
             if [ "$FAILED" -ne "0" ]; then
               STATUS="failed"
+              echo "STATUS_COLOR=red"
+            else
+              echo "STATUS_COLOR=green"
             fi
             echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED ($STATUS)"
-            echo "STATUS_COLOR=green"
-            if [ "$STATUS" = "failed" ]; then
-              echo "STATUS_COLOR=red"
-            fi
           else
             echo "Tests: N/A, Status: N/A"
             echo "STATUS_COLOR=yellow"
           fi
           echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
-          echo "API_TEST_RESULTS='Tests: $TESTS, Status: $STATUS'" >> $GITHUB_ENV
+          echo "API_TEST_RESULTS='Tests: $TESTS, Passed: $PASSED, Failed: $FAILED ($STATUS)'" >> $GITHUB_ENV
           echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
 
       - name: Create API Test Results badge
