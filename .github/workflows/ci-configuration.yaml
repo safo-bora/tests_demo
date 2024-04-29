@@ -134,18 +134,19 @@ jobs:
             STATUS="passed"
             if [ "$FAILED" -ne "0" ]; then
               STATUS="failed"
-              echo "STATUS_COLOR=red"
+              STATUS_COLOR="red"
             else
-              echo "STATUS_COLOR=green"
+              STATUS_COLOR="green"
             fi
-            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED ($STATUS)"
+            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
           else
             echo "Tests: N/A, Status: N/A"
-            echo "STATUS_COLOR=yellow"
+            STATUS_COLOR="yellow"
           fi
           echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
-          echo "API_TEST_RESULTS='Tests: $TESTS, Passed: $PASSED, Failed: $FAILED ($STATUS)'" >> $GITHUB_ENV
+          echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
           echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+          echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
 
       - name: Create API Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
