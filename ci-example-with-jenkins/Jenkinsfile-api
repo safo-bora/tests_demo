@@ -36,9 +36,17 @@ pipeline {
         }
     }
     post {
-        always {
-            junit 'reports/*.xml'  // Publish test reports
+            always {
+                junit 'reports/*.xml'  // Publish test reports
+                publishHTML target: [
+                    reportDir: 'reports',
+                    reportFiles: 'test-report.html',
+                    reportName: 'HTML Report',
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true
+                ]
+            }
         }
-    }
 }
 
