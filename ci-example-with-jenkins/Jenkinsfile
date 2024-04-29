@@ -25,7 +25,7 @@ pipeline {
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/pip install -r requirements.txt
 
                                 # Run tests using nose2 with coverage
-                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v --with-coverage
+                                ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/nose2 -v --with-coverage unit_tests
 
                                 # Generate XML coverage report
                                 ${WORKSPACE}/myenv-${PYTHON_VERSION}/bin/coverage xml -o coverage.xml
