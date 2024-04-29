@@ -124,12 +124,36 @@ jobs:
         with:
           files: "reports/*.xml"
 
+      - name: Generate API Test Results badge
+        run: |
+          JSON_FILE="api-test-results.json"
+          if [ -f "$JSON_FILE" ]; then
+            TESTS=$(jq -r '.summary.total' $JSON_FILE)
+            PASSED=$(jq -r '.summary.passed' $JSON_FILE)
+            FAILED=$(jq -r '.summary.failed' $JSON_FILE)
+            STATUS="passed"
+            if [ "$FAILED" -ne "0" ]; then
+              STATUS="failed"
+            fi
+            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED ($STATUS)"
+            echo "STATUS_COLOR=green"
+            if [ "$STATUS" = "failed" ]; then
+              echo "STATUS_COLOR=red"
+            fi
+          else
+            echo "Tests: N/A, Status: N/A"
+            echo "STATUS_COLOR=yellow"
+          fi
+          echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
+          echo "API_TEST_RESULTS='Tests: $TESTS, Status: $STATUS'" >> $GITHUB_ENV
+          echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+
       - name: Create API Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
         with:
           label: API Tests
-          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
-          color: 'blue'
+          status: ${{ env.API_TEST_RESULTS }}
+          color: ${{ env.STATUS_COLOR }}
           path: api-tests-badge.svg
 
       - name: Upload API Tests Badge to Gist
