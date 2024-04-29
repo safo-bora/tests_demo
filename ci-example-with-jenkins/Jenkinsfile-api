@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        API_KEY = credentials('api-key')
-        TOKEN = credentials('token')
+        API_KEY = credentials('API_KEY')
+        TOKEN = credentials('TOKEN')
     }
     stages {
         stage('Checkout') {
