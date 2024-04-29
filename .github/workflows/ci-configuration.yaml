@@ -91,3 +91,24 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
           file: coverage-badge.svg
+  api-testing:
+    needs: unit-testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.11, 3.12 ]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run API Tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+        TOKEN: ${{ secrets.TOKEN }}
+      run: pytest api/api_tests/

@@ -11,7 +11,7 @@ class TestCalculatorWebFetch(unittest.TestCase):
         """
         Run this test suite to ensure your function handles the web request as
         expected. This mock prevents network calls during testing,
-        which speeds up your tests and removes dependencies on external services.
+        which speeds up your api_tests and removes dependencies on external services.
         """
         # Configure the mock to simulate a successful HTTP response
         mock_get.return_value.status_code = 200
