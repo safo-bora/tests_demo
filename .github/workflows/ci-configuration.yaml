@@ -94,6 +94,7 @@ jobs:
   api-testing:
     needs: unit-testing
     runs-on: ubuntu-latest
+    environment: trello
     strategy:
       matrix:
         python-version: [ 3.11, 3.12 ]
