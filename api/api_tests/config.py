@@ -6,6 +6,8 @@ def get_env_var(name):
     value = os.getenv(name)
     if value is None:
         raise ValueError(f"{name} environment variable is not set!")
+    else:
+        print("DEBUG!!!!! ENV IS CORRECT!")
     return value
 
 
