@@ -97,26 +97,53 @@ jobs:
     environment: trello
     strategy:
       matrix:
-        python-version: [ 3.11, 3.12 ]
+        python-version: [3.11, 3.12]
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run API Tests
-      env:
-        API_KEY: ${{ secrets.API_KEY }}
-        TOKEN: ${{ secrets.TOKEN }}
-      run: pytest api/api_tests/
-    - name: Upload test reports
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-reports
-        path: |
-          reports/test-report.html
-          reports/test-results.xml
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest-json-report
+
+      - name: Run API Tests and generate reports
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          TOKEN: ${{ secrets.TOKEN }}
+        run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
+
+      - name: Publish API Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "reports/*.xml"
+
+      - name: Create API Test Results badge
+        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+        with:
+          label: API Tests
+          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
+          color: 'blue'
+          path: api-tests-badge.svg
+
+      - name: Upload API Tests Badge to Gist
+        if: github.ref == 'refs/heads/main'
+        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+          file: api-tests-badge.svg
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: |
+            reports/test-report.html
+            reports/test-results.xml
