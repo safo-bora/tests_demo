@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'agent-mac' }
+    environment {
+        PYTHON_VERSION = '3.12'
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -8,30 +11,18 @@ pipeline {
         }
 
         stage('Set up Python') {
-            matrix {
-                axes {
-                    axis {
-                        name 'PYTHON_VERSION'
-                        values '3.12'
-                    }
-                }
-                stages {
-                    stage('Use Python Version') {
-                        steps {
-                            sh "python${PYTHON_VERSION} -m venv venv${PYTHON_VERSION}"
-                            sh ". venv${PYTHON_VERSION}/bin/activate"
-                            sh "venv${PYTHON_VERSION}/bin/python -m pip install --upgrade pip"
-                            sh "venv${PYTHON_VERSION}/bin/pip install -r requirements.txt"
-                        }
-                    }
-                }
+            steps {
+                sh "python${env.PYTHON_VERSION} -m venv venv${env.PYTHON_VERSION}"
+                sh ". venv${env.PYTHON_VERSION}/bin/activate"
+                sh "venv${env.PYTHON_VERSION}/bin/python -m pip install --upgrade pip"
+                sh "venv${env.PYTHON_VERSION}/bin/pip install -r requirements.txt"
             }
         }
 
         stage('Run API Tests and generate reports') {
             steps {
                 sh """
-                    . venv${PYTHON_VERSION}/bin/activate
+                    . venv${env.PYTHON_VERSION}/bin/activate
                     pytest api/api_tests/
                     deactivate
                 """
