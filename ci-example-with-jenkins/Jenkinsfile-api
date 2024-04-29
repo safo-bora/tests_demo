@@ -35,4 +35,10 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            junit 'reports/*.xml'  // Publish test reports
+        }
+    }
 }
+
