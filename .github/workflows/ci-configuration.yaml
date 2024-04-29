@@ -113,3 +113,10 @@ jobs:
         API_KEY: ${{ secrets.API_KEY }}
         TOKEN: ${{ secrets.TOKEN }}
       run: pytest api/api_tests/
+    - name: Upload test reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: |
+          reports/test-report.html
+          reports/test-results.xml
