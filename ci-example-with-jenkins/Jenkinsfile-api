@@ -32,14 +32,9 @@ pipeline {
             steps {
                 sh """
                     . venv${PYTHON_VERSION}/bin/activate
-                    pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
+                    pytest api/api_tests/
                     deactivate
                 """
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'api-test-results.json', fingerprint: true
-                }
             }
         }
 
