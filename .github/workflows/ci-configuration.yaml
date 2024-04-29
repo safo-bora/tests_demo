@@ -1,4 +1,4 @@
-name: Run Unit Testing
+name: Run Testing
 
 on: [push]
 
@@ -109,6 +109,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run API Tests
       env:
-        API_KEY: ${{ secrets.API_KEY }}
-        TOKEN: ${{ secrets.TOKEN }}
+        API_KEY: ${{ env.API_KEY }}
+        TOKEN: ${{ env.TOKEN }}
       run: pytest api/api_tests/
