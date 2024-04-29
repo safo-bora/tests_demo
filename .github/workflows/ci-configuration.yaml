@@ -25,7 +25,7 @@ jobs:
 
       - name: Run unittests with nose2 and generate coverage report
         run: |
-          nose2 -v --with-coverage
+          nose2 -v --with-coverage unit_tests
           coverage json -o coverage.json  # Generate JSON coverage report
 
       - name: Publish Test Results
