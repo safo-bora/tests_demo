@@ -12,7 +12,7 @@ pipeline {
                 axes {
                     axis {
                         name 'PYTHON_VERSION'
-                        values '3.11', '3.12'
+                        values '3.12'
                     }
                 }
                 stages {
@@ -20,8 +20,8 @@ pipeline {
                         steps {
                             sh "python${PYTHON_VERSION} -m venv venv${PYTHON_VERSION}"
                             sh ". venv${PYTHON_VERSION}/bin/activate"
-                            sh "python -m pip install --upgrade pip"
-                            sh "pip install -r requirements.txt"
+                            sh "venv${PYTHON_VERSION}/bin/python -m pip install --upgrade pip"
+                            sh "venv${PYTHON_VERSION}/bin/pip install -r requirements.txt"
                         }
                     }
                 }
