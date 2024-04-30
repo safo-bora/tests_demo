@@ -9,11 +9,13 @@ def get_env_var(name):
     return value
 
 
+# ==============================
 # Secrets:
 API_KEY = get_env_var("API_KEY")
 TOKEN = get_env_var("TOKEN")
 
-# Constant:
+# ==============================
+# Constants:
 BOARD_ID = "bzH1Yram"
 
 
