@@ -36,10 +36,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      
+
       - name: Upload Metrics File
         if: always()
-        run: cd reports && aws s3 cp junit-report.xml s3://github-action-bucket234/junit-report.xml
+        run: |
+          cd reports
+          timestamp=$(date +"%Y%m%d_%H%M%S")
+          aws s3 cp junit-report.xml s3://github-action-bucket234/junit-report_${timestamp}.xml
+
 
   #     - name: Publish Test Results
   #       uses: EnricoMi/publish-unit-test-result-action@v2
