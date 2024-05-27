@@ -5,6 +5,7 @@ on: [push]
 jobs:
   unit-testing:
     runs-on: ubuntu-latest
+    environment: AWS
 
     strategy:
       matrix:
