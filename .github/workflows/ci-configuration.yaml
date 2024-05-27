@@ -29,17 +29,17 @@ jobs:
           nose2 -v --with-coverage unit_tests
           coverage json -o coverage.json  # Generate JSON coverage report
 
-      - name: Process test results
-        run: |
-          cd reports
-          pwd
-          ls -la 
-          passed_tests=$(grep -o '<testcase ' junit-report.xml | wc -l)
-          failed_tests=$(grep -o '<failure ' junit-report.xml | wc -l)
-          skipped_tests=$(grep -o '<skipped ' junit-report.xml | wc -l)
-          echo "tests_passed $passed_tests" > metrics.txt
-          echo "tests_failed $failed_tests" >> metrics.txt
-          echo "tests_skipped $skipped_tests" >> metrics.txt
+      # - name: Process test results
+      #   run: |
+      #     cd reports
+      #     pwd
+      #     ls -la 
+      #     passed_tests=$(grep -o '<testcase ' junit-report.xml | wc -l)
+      #     failed_tests=$(grep -o '<failure ' junit-report.xml | wc -l)
+      #     skipped_tests=$(grep -o '<skipped ' junit-report.xml | wc -l)
+      #     echo "tests_passed $passed_tests" > metrics.txt
+      #     echo "tests_failed $failed_tests" >> metrics.txt
+      #     echo "tests_skipped $skipped_tests" >> metrics.txt
 
       - name: Upload Metrics to S3
         uses: aws-actions/configure-aws-credentials@v1
@@ -49,7 +49,7 @@ jobs:
           aws-region: us-west-2
       
       - name: Upload Metrics File
-        run: cd reports && aws s3 cp metrics.txt s3://github-action-bucket234/metrics.txt
+        run: cd reports && aws s3 cp junit-report.xml s3://github-action-bucket234/junit-report.xml
 
   #     - name: Publish Test Results
   #       uses: EnricoMi/publish-unit-test-result-action@v2
