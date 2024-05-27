@@ -33,9 +33,9 @@ jobs:
           cd reports
           pwd
           ls -la 
-          passed_tests=$(grep -o '<testcase ' test-results.xml | wc -l)
-          failed_tests=$(grep -o '<failure ' test-results.xml | wc -l)
-          skipped_tests=$(grep -o '<skipped ' test-results.xml | wc -l)
+          passed_tests=$(grep -o '<testcase ' junit-report.xml | wc -l)
+          failed_tests=$(grep -o '<failure ' junit-report.xml | wc -l)
+          skipped_tests=$(grep -o '<skipped ' junit-report.xml | wc -l)
           echo "tests_passed $passed_tests" > metrics.txt
           echo "tests_failed $failed_tests" >> metrics.txt
           echo "tests_skipped $skipped_tests" >> metrics.txt
@@ -45,10 +45,10 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-west-2
       
       - name: Upload Metrics File
-        run: aws s3 cp metrics.txt s3://github-action-bucket234/metrics.txt
+        run: cd reports && aws s3 cp metrics.txt s3://github-action-bucket234/metrics.txt
 
   #     - name: Publish Test Results
   #       uses: EnricoMi/publish-unit-test-result-action@v2
