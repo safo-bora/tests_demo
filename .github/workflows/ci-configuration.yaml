@@ -38,6 +38,7 @@ jobs:
           aws-region: us-west-2
       
       - name: Upload Metrics File
+        if: always()
         run: cd reports && aws s3 cp junit-report.xml s3://github-action-bucket234/junit-report.xml
 
   #     - name: Publish Test Results
