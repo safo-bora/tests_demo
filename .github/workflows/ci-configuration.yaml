@@ -5,7 +5,6 @@ on: [push]
 jobs:
   unit-testing:
     runs-on: ubuntu-latest
-    environment: AWS
 
     strategy:
       matrix:
@@ -35,7 +34,6 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
-
       - name: Set coverage output variable
         run: |
           cat coverage.json 
@@ -45,23 +43,24 @@ jobs:
             COVERAGE=0  # Set default value to 0 if coverage is not available
           fi
           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-
+      
           # Extract the numeric value from COVERAGE using sed
           COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
-
+      
           COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
           echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_ENV
-
+      
           if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
             echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
           else
             echo "COVERAGE_BADGE_COLOR=green" >> $GITHUB_ENV
+          fi
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
         with:
           label: Tests
-          status: '${{ fromJSON(steps.test-results.outputs.json).formatted.stats.tests }} tests, ${{ fromJSON(steps.test-results.outputs.json).formatted.stats.runs }} runs: ${{ fromJSON(steps.test-results.outputs.json).conclusion }}'
+          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
           color: ${{ env.COVERAGE_BADGE_COLOR }}
           path: tests-badge.svg
 
@@ -92,7 +91,6 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
           file: coverage-badge.svg
-
   api-testing:
     needs: unit-testing
     runs-on: ubuntu-latest
