@@ -29,162 +29,145 @@ jobs:
           nose2 -v --with-coverage unit_tests
           coverage json -o coverage.json  # Generate JSON coverage report
 
-      - name: Upload Metrics to S3
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        id: test-results
         if: always()
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-
-      - name: Upload Metrics File
-        if: always()
+          files: "reports/*.xml"
+      - name: Set coverage output variable
         run: |
-          cd reports
-          timestamp=$(date +"%Y%m%d_%H%M%S")
-          aws s3 cp junit-report.xml s3://github-action-bucket234/junit-report_${timestamp}.xml
-
-
-  #     - name: Publish Test Results
-  #       uses: EnricoMi/publish-unit-test-result-action@v2
-  #       id: test-results
-  #       if: always()
-  #       with:
-  #         files: "reports/*.xml"
-  #     - name: Set coverage output variable
-  #       run: |
-  #         cat coverage.json 
-  #         COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
-  #         echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
-  #         if [ -z "$COVERAGE" ]; then
-  #           COVERAGE=0  # Set default value to 0 if coverage is not available
-  #         fi
-  #         echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+           cat coverage.json 
+           COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
+           echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
+           if [ -z "$COVERAGE" ]; then
+             COVERAGE=0  # Set default value to 0 if coverage is not available
+           fi
+           echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
       
-  #         # Extract the numeric value from COVERAGE using sed
-  #         COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
+           # Extract the numeric value from COVERAGE using sed
+           COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
       
-  #         COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
-  #         echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_ENV
+           COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
+           echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_ENV
       
-  #         if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
-  #           echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
-  #         else
-  #           echo "COVERAGE_BADGE_COLOR=green" >> $GITHUB_ENV
-  #         fi
+           if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
+             echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
+           else
+             echo "COVERAGE_BADGE_COLOR=green" >> $GITHUB_ENV
+           fi
+      - name: Create Test Results badge
+        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+        with:
+           label: Tests
+           status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
+           color: ${{ env.COVERAGE_BADGE_COLOR }}
+           path: tests-badge.svg
 
-  #     - name: Create Test Results badge
-  #       uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-  #       with:
-  #         label: Tests
-  #         status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
-  #         color: ${{ env.COVERAGE_BADGE_COLOR }}
-  #         path: tests-badge.svg
+      - name: Create Coverage badge
+        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+        with:
+           label: Coverage
+           status: '${{ env.COVERAGE_PERCENTAGE }}%'
+           color: ${{ env.COVERAGE_BADGE_COLOR }}
+           path: coverage-badge.svg
 
-  #     - name: Create Coverage badge
-  #       uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-  #       with:
-  #         label: Coverage
-  #         status: '${{ env.COVERAGE_PERCENTAGE }}%'
-  #         color: ${{ env.COVERAGE_BADGE_COLOR }}
-  #         path: coverage-badge.svg
+      - name: Upload Tests Badge to Gist
+        if: >
+           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+           github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+         with:
+           token: ${{ secrets.GIST_TOKEN }}
+           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+           file: tests-badge.svg
 
-  #     - name: Upload Tests Badge to Gist
-  #       if: >
-  #         github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-  #         github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-  #       uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-  #       with:
-  #         token: ${{ secrets.GIST_TOKEN }}
-  #         gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-  #         file: tests-badge.svg
+      - name: Upload Coverage Badge to Gist
+        if: >
+           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+           github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+         with:
+           token: ${{ secrets.GIST_TOKEN }}
+           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+           file: coverage-badge.svg
+  api-testing:
+     needs: unit-testing
+     runs-on: ubuntu-latest
+     environment: trello
+     strategy:
+       matrix:
+         python-version: [3.11, 3.12]
 
-  #     - name: Upload Coverage Badge to Gist
-  #       if: >
-  #         github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-  #         github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-  #       uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-  #       with:
-  #         token: ${{ secrets.GIST_TOKEN }}
-  #         gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-  #         file: coverage-badge.svg
-  # api-testing:
-  #   needs: unit-testing
-  #   runs-on: ubuntu-latest
-  #   environment: trello
-  #   strategy:
-  #     matrix:
-  #       python-version: [3.11, 3.12]
+     steps:
+       - uses: actions/checkout@v3
 
-  #   steps:
-  #     - uses: actions/checkout@v3
+       - name: Set up Python ${{ matrix.python-version }}
+         uses: actions/setup-python@v2
+         with:
+           python-version: ${{ matrix.python-version }}
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+       - name: Install dependencies
+         run: |
+           python -m pip install --upgrade pip
+           pip install -r requirements.txt
 
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements.txt
+       - name: Run API Tests and generate reports
+         env:
+           API_KEY: ${{ secrets.API_KEY }}
+           TOKEN: ${{ secrets.TOKEN }}
+         run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
 
-  #     - name: Run API Tests and generate reports
-  #       env:
-  #         API_KEY: ${{ secrets.API_KEY }}
-  #         TOKEN: ${{ secrets.TOKEN }}
-  #       run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
+       - name: Publish API Test Results
+         uses: EnricoMi/publish-unit-test-result-action@v2
+         if: always()
+         with:
+           files: "reports/*.xml"
 
-  #     - name: Publish API Test Results
-  #       uses: EnricoMi/publish-unit-test-result-action@v2
-  #       if: always()
-  #       with:
-  #         files: "reports/*.xml"
+       - name: Generate API Test Results badge
+         run: |
+           JSON_FILE="api-test-results.json"
+           if [ -f "$JSON_FILE" ]; then
+             TESTS=$(jq -r '.summary.total' $JSON_FILE)
+             PASSED=$(jq -r '.summary.passed' $JSON_FILE)
+             FAILED=$(jq -r '.summary.failed' $JSON_FILE)
+             STATUS="passed"
+             if [ "$FAILED" -ne "0" ]; then
+               STATUS="failed"
+               STATUS_COLOR="red"
+             else
+               STATUS_COLOR="green"
+             fi
+             echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
+           else
+             echo "Tests: N/A, Status: N/A"
+             STATUS_COLOR="yellow"
+           fi
+           echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
+           echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
+           echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+           echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
 
-  #     - name: Generate API Test Results badge
-  #       run: |
-  #         JSON_FILE="api-test-results.json"
-  #         if [ -f "$JSON_FILE" ]; then
-  #           TESTS=$(jq -r '.summary.total' $JSON_FILE)
-  #           PASSED=$(jq -r '.summary.passed' $JSON_FILE)
-  #           FAILED=$(jq -r '.summary.failed' $JSON_FILE)
-  #           STATUS="passed"
-  #           if [ "$FAILED" -ne "0" ]; then
-  #             STATUS="failed"
-  #             STATUS_COLOR="red"
-  #           else
-  #             STATUS_COLOR="green"
-  #           fi
-  #           echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
-  #         else
-  #           echo "Tests: N/A, Status: N/A"
-  #           STATUS_COLOR="yellow"
-  #         fi
-  #         echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
-  #         echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
-  #         echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
-  #         echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
+       - name: Create API Test Results badge
+         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+         with:
+           label: API Tests
+           status: ${{ env.API_TEST_RESULTS }}
+           color: ${{ env.STATUS_COLOR }}
+           path: api-tests-badge.svg
 
-  #     - name: Create API Test Results badge
-  #       uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-  #       with:
-  #         label: API Tests
-  #         status: ${{ env.API_TEST_RESULTS }}
-  #         color: ${{ env.STATUS_COLOR }}
-  #         path: api-tests-badge.svg
+       - name: Upload API Tests Badge to Gist
+         if: github.ref == 'refs/heads/main'
+         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+         with:
+           token: ${{ secrets.GIST_TOKEN }}
+           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+           file: api-tests-badge.svg
 
-  #     - name: Upload API Tests Badge to Gist
-  #       if: github.ref == 'refs/heads/main'
-  #       uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-  #       with:
-  #         token: ${{ secrets.GIST_TOKEN }}
-  #         gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-  #         file: api-tests-badge.svg
-
-  #     - name: Upload test reports
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: test-reports
-  #         path: |
-  #           reports/test-report.html
-  #           reports/test-results.xml
+       - name: Upload test reports
+         uses: actions/upload-artifact@v2
+         with:
+           name: test-reports
+           path: |
+             reports/test-report.html
+             reports/test-results.xml

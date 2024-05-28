@@ -20,7 +20,7 @@ class TestCalculator(unittest.TestCase):
         """
         Test the addition function with positive, negative, and zero summands.
         """
-        self.assertEqual(add(2, 3), 70)
+        self.assertEqual(add(2, 3), 5)
         self.assertEqual(add(-1, 1), 0)
         self.assertEqual(add(-1, -1), -2)
 
