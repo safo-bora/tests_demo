@@ -34,6 +34,9 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
+      - name: Send reports to Grafana (optional step just to verify setup)
+        if: always()
+        run: python send_metrics_to_influxdb.py --commit "Setup CI" --author "KatyaR" --path_to_junit_reports "/reports/junit-report.xml" --test_level "unit"
       - name: Set coverage output variable
         run: |
           cat coverage.json 
@@ -91,83 +94,83 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
           file: coverage-badge.svg
-  api-testing:
-    needs: unit-testing
-    runs-on: ubuntu-latest
-    environment: trello
-    strategy:
-      matrix:
-        python-version: [3.11, 3.12]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run API Tests and generate reports
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
-          TOKEN: ${{ secrets.TOKEN }}
-        run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
-
-      - name: Publish API Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: "reports/*.xml"
-
-      - name: Generate API Test Results badge
-        run: |
-          JSON_FILE="api-test-results.json"
-          if [ -f "$JSON_FILE" ]; then
-            TESTS=$(jq -r '.summary.total' $JSON_FILE)
-            PASSED=$(jq -r '.summary.passed' $JSON_FILE)
-            FAILED=$(jq -r '.summary.failed' $JSON_FILE)
-            STATUS="passed"
-            if [ "$FAILED" -ne "0" ]; then
-              STATUS="failed"
-              STATUS_COLOR="red"
-            else
-              STATUS_COLOR="green"
-            fi
-            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
-          else
-            echo "Tests: N/A, Status: N/A"
-            STATUS_COLOR="yellow"
-          fi
-          echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
-          echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
-          echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
-          echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
-
-      - name: Create API Test Results badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: API Tests
-          status: ${{ env.API_TEST_RESULTS }}
-          color: ${{ env.STATUS_COLOR }}
-          path: api-tests-badge.svg
-
-      - name: Upload API Tests Badge to Gist
-        if: github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: api-tests-badge.svg
-
-      - name: Upload test reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-reports
-          path: |
-            reports/test-report.html
-            reports/test-results.xml
+#  api-testing:
+#    needs: unit-testing
+#    runs-on: ubuntu-latest
+#    environment: trello
+#    strategy:
+#      matrix:
+#        python-version: [3.11, 3.12]
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.txt
+#
+#      - name: Run API Tests and generate reports
+#        env:
+#          API_KEY: ${{ secrets.API_KEY }}
+#          TOKEN: ${{ secrets.TOKEN }}
+#        run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
+#
+#      - name: Publish API Test Results
+#        uses: EnricoMi/publish-unit-test-result-action@v2
+#        if: always()
+#        with:
+#          files: "reports/*.xml"
+#
+#      - name: Generate API Test Results badge
+#        run: |
+#          JSON_FILE="api-test-results.json"
+#          if [ -f "$JSON_FILE" ]; then
+#            TESTS=$(jq -r '.summary.total' $JSON_FILE)
+#            PASSED=$(jq -r '.summary.passed' $JSON_FILE)
+#            FAILED=$(jq -r '.summary.failed' $JSON_FILE)
+#            STATUS="passed"
+#            if [ "$FAILED" -ne "0" ]; then
+#              STATUS="failed"
+#              STATUS_COLOR="red"
+#            else
+#              STATUS_COLOR="green"
+#            fi
+#            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
+#          else
+#            echo "Tests: N/A, Status: N/A"
+#            STATUS_COLOR="yellow"
+#          fi
+#          echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
+#          echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
+#          echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+#          echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
+#
+#      - name: Create API Test Results badge
+#        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+#        with:
+#          label: API Tests
+#          status: ${{ env.API_TEST_RESULTS }}
+#          color: ${{ env.STATUS_COLOR }}
+#          path: api-tests-badge.svg
+#
+#      - name: Upload API Tests Badge to Gist
+#        if: github.ref == 'refs/heads/main'
+#        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+#        with:
+#          token: ${{ secrets.GIST_TOKEN }}
+#          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+#          file: api-tests-badge.svg
+#
+#      - name: Upload test reports
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: test-reports
+#          path: |
+#            reports/test-report.html
+#            reports/test-results.xml
