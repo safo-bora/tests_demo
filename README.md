@@ -81,9 +81,10 @@ RESULT:
 - Login/password:
 TestsAreWrittenByPeople/TestsAreWrittenByPeople
 
-Code: send_metrics_to_influxdb.py
+Code : send_metrics_to_influxdb.py
 
 Screenshots:
+
 <img src="https://github.com/safo-bora/tests_demo/raw/main/screens/Screenshot1.png" width="700">
 <img src="https://github.com/safo-bora/tests_demo/raw/main/screens/Screenshot2.png" width="700">
 
