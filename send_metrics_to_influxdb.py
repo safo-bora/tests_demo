@@ -42,6 +42,7 @@ DB_URL = get_env_var("INFLUX_DB_URL")
 
 
 def send_report(level, reports, author, commit):
+    print("Current working directory:", os.getcwd())
     tree = ET.parse(reports)
     root = tree.getroot()
 
