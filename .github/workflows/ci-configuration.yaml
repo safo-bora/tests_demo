@@ -37,6 +37,8 @@ jobs:
       - name: Send reports to Grafana (optional step just to verify setup)
         if: always()
         run: python send_metrics_to_influxdb.py --commit "Setup CI" --author "KatyaR" --path_to_junit_reports "/reports/junit-report.xml" --test_level "unit"
+        env:
+          INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
       - name: Set coverage output variable
         run: |
           cat coverage.json 
