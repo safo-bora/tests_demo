@@ -111,6 +111,7 @@ if __name__ == "__main__":
         send_report(level=args.test_level,
                     reports=args.path_to_junit_reports,
                     author=args.author, commit=args.commit)
+        print("DONE!")
     except Exception as e:
         print("------------- ERROR---------------------")
         raise Exception(f"An error occurred: {e}")
