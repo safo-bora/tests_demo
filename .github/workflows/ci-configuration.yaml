@@ -102,7 +102,7 @@ jobs:
   api-testing:
     needs: unit-testing
     runs-on: ubuntu-latest
-    environment: trello, AWS
+    environment: trello
     strategy:
       matrix:
         python-version: [3.12]
