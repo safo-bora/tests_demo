@@ -1,4 +1,4 @@
-# Test Project
+# Project for automation testing setup and experiments with different CI,  reports, and tools for testing
 [![Run Unit Testing](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml/badge.svg?branch=main)](https://github.com/safo-bora/tests_demo/actions/workflows/ci-configuration.yaml)
 ![Badge](https://gist.githubusercontent.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c/raw/tests-badge.svg)
 ![Badge](https://gist.githubusercontent.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c/raw/coverage-badge.svg)
@@ -59,8 +59,9 @@ _______
 
 # Grafana For Metrics from Testing (In Progress)
 
-- URL: http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s&from=now-2M&to=now
-- Login/password TestsAreWrittenByPeople/TestsAreWrittenByPeople
+- URL: http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s&from=now-1M&to=now
+- Login/password:
+TestsAreWrittenByPeople/TestsAreWrittenByPeople
 
 Of course, when a project is small and the team is small, metrics may not be needed. But when the team is large and there are many tests, we need to understand how long each test takes, which tests are flaky, and which errors occur in which tests.
 
