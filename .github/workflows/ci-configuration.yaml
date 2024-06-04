@@ -5,7 +5,7 @@ on: [push]
 jobs:
   unit-testing:
     runs-on: ubuntu-latest
-
+    environment: AWS
     strategy:
       matrix:
         python-version: [3.12]
