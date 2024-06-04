@@ -39,6 +39,9 @@ jobs:
         run: python send_metrics_to_influxdb.py --commit "Setup CI" --author "KatyaR" --path_to_junit_reports "/reports/junit-report.xml" --test_level "unit"
         env:
           INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
+          ORGANIZATION: ${{ secrets.ORGANIZATION }}
       - name: Set coverage output variable
         run: |
           cat coverage.json 
