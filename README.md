@@ -59,7 +59,8 @@ _______
 
 # Grafana For Metrics from Testing (In Progress)
 
-- URL: http://35.176.58.38:3000/
+- URL: http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s&from=now-2M&to=now
+- Login/password TestsAreWrittenByPeople/TestsAreWrittenByPeople
 
 Of course, when a project is small and the team is small, metrics may not be needed. But when the team is large and there are many tests, we need to understand how long each test takes, which tests are flaky, and which errors occur in which tests.
 
