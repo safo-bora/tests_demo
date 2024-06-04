@@ -103,10 +103,15 @@ if __name__ == "__main__":
     try:
         write_api = client.write_api(write_options=SYNCHRONOUS)
 
+        print("=========================")
+        print("Reports:")
+        print(os.listdir("./reports"))
+        print("=========================")
         send_report(level=args.test_level,
-                    reports=os.path.join(os.path.abspath(""), args.path_to_junit_reports),
+                    reports=args.path_to_junit_reports,
                     author=args.author, commit=args.commit)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print("------------- ERROR---------------------")
+        raise Exception(f"An error occurred: {e}")
     finally:
         client.close()
