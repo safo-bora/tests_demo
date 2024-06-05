@@ -77,9 +77,7 @@ Now I took Grafana as an example to experiment with it.
 - Whether we rerun tests, and how many times?
 
 RESULT:
-- URL: http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s&from=now-1M&to=now
-- Login/password:
-TestsAreWrittenByPeople/TestsAreWrittenByPeople
+- http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s
 
 Code : https://github.com/safo-bora/tests_demo/blob/main/send_metrics_to_influxdb.py
 
