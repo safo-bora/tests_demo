@@ -20,9 +20,7 @@ The created data points are written to the specified InfluxDB bucket using the w
 
 The send_report function is called to process the JUnit report and send the data to InfluxDB. 
 
-URL: http://35.176.58.38:3000/d/edneb78dskzcwn/demo-project-test-metrics-influxdb-2b-grafana?orgId=1&refresh=5s&from=now-1M&to=now
-Login/password: 
-TestsAreWrittenByPeople/TestsAreWrittenByPeople
+URL: http://35.176.58.38:3000/public-dashboards/a9ec57ea6b934c8ab14f46fec32e00f9?orgId=1&refresh=5s
 
 """
 
