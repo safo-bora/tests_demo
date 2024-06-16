@@ -208,6 +208,7 @@ jobs:
             echo "$postman_environment_json" > postman_environment.json
           
             ls -la
+            cat postman_environment.json
             
             newman run postman_collection.json --environment postman_environment.json  \
              --reporters cli,junit --reporter-junit-export newman_report.xml
