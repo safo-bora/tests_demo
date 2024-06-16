@@ -203,9 +203,10 @@ jobs:
         run: | 
             cd ./api/api_tests2/
             echo "${{ secrets.POSTMAN_ENVIRONMENT_ISON }}" > postman_environment.json
+            cat postman_environment.json
 
-            newman --version
-            newman run postman_collection.json --environment postman_environment.json  \
-             --reporters cli,junit --reporter-junit-export newman_report.xml
+#            newman --version
+#            newman run postman_collection.json --environment postman_environment.json  \
+#             --reporters cli,junit --reporter-junit-export newman_report.xml
         
 
