@@ -11,3 +11,5 @@ To create a Trello card using Postman and run tests using Python, we can follow 
 - Export the Postman Collection: Export our Postman collection as a JSON file.
 - Write a Python script to run the Postman collection using Newman: 
 - Use the subprocess module to run Newman and handle the results.
+
+<img src="https://github.com/safo-bora/tests_demo/raw/main/screens/screenPostman.png" width="600">
