@@ -203,7 +203,7 @@ jobs:
         run: | 
             cd ./api/api_tests2/
             postman_environment_json=$POSTMAN_ENVIRONMENT_JSON
-            echo "2debug => $POSTMAN_ENVIRONMENT_JSON"
+            echo "2debug => ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}"
 #            echo "$postman_environment_json" > postman_environment.json
 #
 #            newman --version
