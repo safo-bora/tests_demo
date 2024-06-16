@@ -198,11 +198,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run API Tests with Postman
-#        env:
-#          POSTMAN_ENVIRONMENT_ISON: ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}
+        env:
+          POSTMAN_ENVIRONMENT_ISON: ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}
         run: | 
             cd ./api/api_tests2/
-            echo "${{ secrets.POSTMAN_ENVIRONMENT_ISON }}" > postman_environment.json
+            echo "$POSTMAN_ENVIRONMENT_ISON" > postman_environment.json
 
             newman --version
             newman run postman_collection.json --environment postman_environment.json  \
