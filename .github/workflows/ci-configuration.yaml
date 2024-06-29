@@ -3,7 +3,7 @@ name: Run Testing
 on:
   push:
   schedule:
-    - cron: '0 */12 * * *'  # This will run the job every 12 hours
+    - cron: '0 0 * * *'
 
 jobs:
   unit-testing:
