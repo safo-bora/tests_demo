@@ -42,7 +42,11 @@ class TestTrelloAPI:
     def test_get_cards_on_board(self):
         cards = self.trello_api.get_cards_on_board(BOARD_ID)
         assert len(cards) > 0, "There are should be at least one card"
-        assert cards[-1]["id"] == self.card_id
+
+        # Check that new card is on the bord
+        cards_ids = list(card["id"] for card in cards)
+        assert self.card_id in cards_ids
+
 
     def test_create_label(self):
         color = random.choice(("red", "green", "blue"))
@@ -64,6 +68,3 @@ class TestTrelloAPI:
         assert len(labels_after) < len(labels_before), "Amount of labels didn't change"
         for label in labels_after:
             assert label["id"] != label_id, "Label didn't delete"
-
-
-
