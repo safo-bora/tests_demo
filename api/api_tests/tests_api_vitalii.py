@@ -47,7 +47,6 @@ class TestTrelloAPI:
         cards_ids = list(card["id"] for card in cards)
         assert self.card_id in cards_ids
 
-
     def test_create_label(self):
         color = random.choice(("red", "green", "blue"))
         label = self.trello_api.create_label_on_board(board_id=BOARD_ID, color=color)
