@@ -1,11 +1,7 @@
 import random
-import time
-
-import pytest
 
 from api.api_tests.connection.trello_connection import TrelloAPI
 from api.api_tests.connection.config import BOARD_ID
-from api.api_tests.connection.lib import assert_properties
 from log_lib import logger
 
 
