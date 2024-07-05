@@ -52,3 +52,53 @@ class TrelloAPI:
         response.raise_for_status()
         # TODO: Return collection, not json
         return response.json()
+
+    def get_membership_of_board(self, board_id):
+        response = self.http.get(f"boards/{board_id}/memberships", params=self.auth_params)
+        response.raise_for_status()
+        # TODO: Return collection, not json
+        return response.json()
+
+    def get_actions_of_board(self, board_id):
+        response = self.http.get(f"boards/{board_id}/actions", params=self.auth_params)
+        response.raise_for_status()
+        # TODO: Return collection, not json
+        return response.json()
+
+    def get_card_on_board(self, board_id, card_id):
+        response = self.http.get(f"boards/{board_id}/cards/{card_id}", params=self.auth_params)
+        response.raise_for_status()
+        # TODO: Return collection, not json
+        return response.json()
+
+    def get_cards_on_board(self, board_id):
+        response = self.http.get(f"boards/{board_id}/cards", params=self.auth_params)
+        response.raise_for_status()
+        # TODO: Return collection, not json
+        return response.json()
+
+    def get_label_on_board(self, board_id):
+        response = self.http.get(f"boards/{board_id}/labels", params=self.auth_params)
+        response.raise_for_status()
+        # TODO: Return collection, not json
+        return response.json()
+
+    def create_label_on_board(self, board_id, label_name="Test_label", color=None):
+        params = {'name': label_name, "color": color, **self.auth_params}
+        response = self.http.post(f"boards/{board_id}/labels", params=params)
+        response.raise_for_status()
+        # TODO: Return card object, not json
+        return response.json()
+
+    def delete_label(self, label_id):
+        response = self.http.delete(f"labels/{label_id}", params=self.auth_params)
+        if response.status_code == 200:
+            logger.info("Label deleted successfully")
+            return response.json()
+        elif response.status_code == 404:
+            logger.warning(f"Label with ID {label_id} not found")
+        else:
+            logger.error(f"Error deleting label: {response.status_code} - {response.text}")
+        return None
+
+
