@@ -13,9 +13,10 @@ class TestTrelloAPI:
         self.card_api = CardAPI()
 
         lists = self.board_api.fetch_lists(BOARD_ID)
-        list_id = lists[0]['id'] if lists else self.board_api.create_list(BOARD_ID, "New List")['id']
+
+        list_id = lists.lists[0].id if lists else self.board_api.create_list(BOARD_ID, "New List").id
         card_info = self.card_api.create_card(list_id, "Temporary Card")
-        self.card_id = card_info['id']
+        self.card_id = card_info.id
         logger.info(f"Temporary card created with ID: {self.card_id}")
 
     def teardown_method(self):
@@ -34,7 +35,7 @@ class TestTrelloAPI:
     def test_update_board_name(self):
         new_name = "New Board Name"
         updated_board_info = self.board_api.update_board(BOARD_ID, new_name)
-        assert updated_board_info['name'] == new_name, f"Board name was not updated to '{new_name}'"
+        assert updated_board_info.name == new_name, f"Board name was not updated to '{new_name}'"
 
     def test_delete_card(self):
         # Delete the card
@@ -46,5 +47,5 @@ class TestTrelloAPI:
         updated_cards = self.board_api.fetch_lists(BOARD_ID)
 
         # Verify that the deleted card is no longer in the list of cards
-        deleted_card_ids = [card['id'] for card in updated_cards]
+        deleted_card_ids = [card.id for card in updated_cards.lists]
         assert self.card_id not in deleted_card_ids, "Card was not deleted"
