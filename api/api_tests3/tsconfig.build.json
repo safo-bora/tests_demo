@@ -1,0 +1,22 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "strict": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "checkJs": true,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "noEmit": false,
+        "declaration": true,
+        "declarationMap": true,
+        "lib": ["ES6", "DOM"],
+        "target": "ES6",
+        "module": "ES2020",
+        "moduleResolution": "Node",
+        "outDir": "./dist",
+        "declarationDir": "./dist/types"
+    },
+    "exclude": ["./node_modules", "./src/tests"]
+}
