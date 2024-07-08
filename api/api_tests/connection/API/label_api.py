@@ -13,4 +13,4 @@ class LabelAPI(TrelloAPI):
             logger.warning(f"Label with ID {label_id} not found")
         else:
             logger.error(f"Error deleting label: {response.status_code} - {response.text}")
-        return None
+            raise Exception
