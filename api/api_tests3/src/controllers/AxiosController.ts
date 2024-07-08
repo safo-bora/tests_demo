@@ -13,7 +13,7 @@ export default class AxiosController {
 
   protected options: RequestOptions;
 
-  constructor(options: RequestOptions = { baseUrl: process.env.BASE_URL }) {
+  constructor(options: RequestOptions) {
     this.options = options;
 
     this.instance = axios.create({
