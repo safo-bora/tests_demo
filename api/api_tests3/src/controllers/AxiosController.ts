@@ -11,7 +11,7 @@ export interface RequestOptions {
 export default class AxiosController {
   private instance: AxiosInstance;
 
-  private options: RequestOptions;
+  protected options: RequestOptions;
 
   constructor(options: RequestOptions = { baseUrl: process.env.BASE_URL }) {
     this.options = options;
@@ -59,7 +59,10 @@ export default class AxiosController {
   public searchParams(queryParams: Record<string, any>): this {
     this.options = {
       ...this.options,
-      queryParams,
+      queryParams: {
+        ...this.options.queryParams,
+        ...queryParams,
+      },
     };
     return this;
   }
@@ -83,13 +86,14 @@ export default class AxiosController {
     return this;
   }
 
-  protected async req<T>(method: string, path: string): Promise<AxiosResponse<T>> {
+  protected async req<T>(method: string, path: string, options?: RequestOptions): Promise<AxiosResponse<T>> {
+    const finalOptions = options || this.options;
     const config: AxiosRequestConfig = {
       method,
       url: path,
-      params: this.options.queryParams,
-      headers: { ...this.options.headers },
-      data: method === 'GET' ? undefined : this.options.body,
+      params: finalOptions.queryParams,
+      headers: { ...finalOptions.headers },
+      data: method === 'GET' ? undefined : finalOptions.body,
     };
 
     try {
