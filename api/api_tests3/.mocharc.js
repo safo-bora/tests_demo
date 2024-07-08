@@ -4,7 +4,7 @@ dotenv.config();
 module.exports = {
   require: ['chai/register-expect.js', 'ts-node/register', 'mochawesome/register'],
   extensions: ['ts'],
-  spec: ['src/tests/**/*.ts'],
+  spec: ['src/tests/**/*.spec.ts'],
   timeout: 180_000,
   slow: 60_000,
   color: true,
