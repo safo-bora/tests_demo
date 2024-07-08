@@ -21,4 +21,4 @@ class CardAPI(TrelloAPI):
             logger.warning(f"Card with ID {card_id} not found")
         else:
             logger.error(f"Error deleting card: {response.status_code} - {response.text}")
-        return None
+            raise Exception
