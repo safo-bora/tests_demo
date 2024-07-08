@@ -9,6 +9,7 @@ Tools:
 5. Chai
 6. ESlint
 7. Prettier
+8. Mochawesome
 
 ## Getting started:
 
@@ -39,3 +40,7 @@ or
 ```bash
 npm t
 ```
+
+### HTML Report
+
+You can find the mochawesome HTML report in the `mochawesome-report` folder.
