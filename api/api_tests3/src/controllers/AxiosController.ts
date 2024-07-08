@@ -15,6 +15,7 @@ export default class AxiosController {
 
   constructor(options: RequestOptions = { baseUrl: process.env.BASE_URL }) {
     this.options = options;
+
     this.instance = axios.create({
       baseURL: this.options.baseUrl,
     });
@@ -36,26 +37,6 @@ export default class AxiosController {
     );
   }
 
-  public async get<T>(path: string): Promise<AxiosResponse<T>> {
-    return this.req<T>('GET', path);
-  }
-
-  public async post<T>(path: string): Promise<AxiosResponse<T>> {
-    return this.req<T>('POST', path);
-  }
-
-  public async put<T>(path: string): Promise<AxiosResponse<T>> {
-    return this.req<T>('PUT', path);
-  }
-
-  public async patch<T>(path: string): Promise<AxiosResponse<T>> {
-    return this.req<T>('PATCH', path);
-  }
-
-  public async delete<T>(path: string): Promise<AxiosResponse<T>> {
-    return this.req<T>('DELETE', path);
-  }
-
   public searchParams(queryParams: Record<string, any>): this {
     this.options = {
       ...this.options,
@@ -71,17 +52,6 @@ export default class AxiosController {
     this.options = {
       ...this.options,
       body: data,
-    };
-    return this;
-  }
-
-  public headers(data: Record<string, string>): this {
-    this.options = {
-      ...this.options,
-      headers: {
-        ...this.options.headers,
-        ...data,
-      },
     };
     return this;
   }
