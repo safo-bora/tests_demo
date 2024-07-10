@@ -73,7 +73,12 @@ class TestTrelloAPI:
         for label in labels_after.labels_list:
             assert label.id != label_id, "Label didn't delete"
 
-    def test_label_crud(self):
+    def test_get_label(self):
+        label_id = self.board_api.create_label_on_board(BOARD_ID).id
+        self.label_api.get_label(label_id)
+        self.label_api.delete_label(label_id)
+
+    def test_update_label(self):
         label_id = self.board_api.create_label_on_board(BOARD_ID).id
         label_before = self.label_api.get_label(label_id)
         self.label_api.update_label(label_id, "New label name")
