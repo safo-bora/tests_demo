@@ -14,7 +14,7 @@ jobs:
         python-version: [3.12]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -111,7 +111,7 @@ jobs:
         python-version: [3.12]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -183,7 +183,7 @@ jobs:
           file: api-tests-badge.svg
 
       - name: Upload test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
@@ -196,7 +196,7 @@ jobs:
     environment: trello
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run API Tests with Postman
         env:
           POSTMAN_ENVIRONMENT_ISON: ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}
@@ -207,7 +207,7 @@ jobs:
             newman run postman_collection.json --environment postman_environment.json  \
              --reporters cli,junit --reporter-junit-export newman_report.xml
       - name: Upload test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
