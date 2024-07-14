@@ -189,6 +189,7 @@ jobs:
           path: |
             reports/test-report.html
             reports/test-results.xml
+          retention-days: 10
 
   api-testing-postman:
     needs: unit-testing
@@ -212,6 +213,7 @@ jobs:
           name: postman-test-report
           path: |
             newman_report.xml
+          retention-days: 10
 
   api-testing-typescript-axios:
     needs: unit-testing
