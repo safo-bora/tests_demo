@@ -209,7 +209,7 @@ jobs:
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: postman-test-report
           path: |
             newman_report.xml
 
@@ -238,6 +238,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mochawesome-report
+          name: axios-test-report
           path: ./api/api_tests3/mochawesome-report
           retention-days: 10
