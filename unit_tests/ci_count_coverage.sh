@@ -1,5 +1,8 @@
 #!/bin/bash
 
+pwd
+ls -la 
+
 # Calculate coverage percentage
 COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
 echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
