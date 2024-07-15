@@ -19,14 +19,10 @@ jobs:
           python-version: 3.12
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: install-dependencies
 
       - name: Run unittests with nose2 and generate coverage report
-        run: |
-          nose2 -v --with-coverage unit_tests
-          coverage json -o coverage.json  # Generate JSON coverage report
+        run: run-unit-tests
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -34,52 +30,30 @@ jobs:
         if: always()
         with:
           files: "reports/*.xml"
+
       - name: Send reports to Grafana (optional step just to verify setup)
-        if: always()
-        run: python send_metrics_to_influxdb.py --commit "${{ github.event.head_commit.message }}" --author "${{ github.event.pusher.name }}" --path_to_junit_reports "reports/junit-report.xml" --test_level "unit"
+        run: send-reports-to-grafana
         env:
           INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
           ORGANIZATION: ${{ secrets.ORGANIZATION }}
+
       - name: Set up Coverage and Badge Color
-        run: cd unit_tests && sh ci_count_coverage.sh
+        run: setup-coverage-and-badge-color
+
       - name: Create Test Results badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: Tests
-          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
-          color: ${{ env.COVERAGE_BADGE_COLOR }}
-          path: tests-badge.svg
+        run: create-test-results-badge
 
       - name: Create Coverage badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: Coverage
-          status: '${{ env.COVERAGE_PERCENTAGE }}%'
-          color: ${{ env.COVERAGE_BADGE_COLOR }}
-          path: coverage-badge.svg
+        run: create-coverage-badge
 
       - name: Upload Tests Badge to Gist
-        if: >
-          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: tests-badge.svg
+        run: upload-tests-badge-to-gist
 
       - name: Upload Coverage Badge to Gist
-        if: >
-          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: coverage-badge.svg
-          
+        run: upload-coverage-badge-to-gist
+
   api-testing-python-requests:
     needs: unit-testing
     runs-on: ubuntu-latest
@@ -94,68 +68,36 @@ jobs:
           python-version: 3.12
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: install-dependencies
 
       - name: Run API Tests and generate reports
+        run: run-api-tests
         env:
           API_KEY: ${{ secrets.API_KEY }}
           TOKEN: ${{ secrets.TOKEN }}
-        run: pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
 
       - name: Publish API Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           files: "reports/*.xml"
-      - name: Send reports to Grafana (optional step just to verify setup)
-        if: always()
-        run: python send_metrics_to_influxdb.py --commit "${{ github.event.head_commit.message }}" --author "${{ github.event.pusher.name }}" --path_to_junit_reports "reports/test-results.xml" --test_level "api"
+
+      - name: Send reports to Grafana
+        run: send-reports-to-grafana
         env:
           INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
           ORGANIZATION: ${{ secrets.ORGANIZATION }}
+
       - name: Generate API Test Results badge
-        run: |
-          JSON_FILE="api-test-results.json"
-          if [ -f "$JSON_FILE" ]; then
-            TESTS=$(jq -r '.summary.total' $JSON_FILE)
-            PASSED=$(jq -r '.summary.passed' $JSON_FILE)
-            FAILED=$(jq -r '.summary.failed' $JSON_FILE)
-            STATUS="passed"
-            if [ "$FAILED" -ne "0" ]; then
-              STATUS="failed"
-              STATUS_COLOR="red"
-            else
-              STATUS_COLOR="green"
-            fi
-            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
-          else
-            echo "Tests: N/A, Status: N/A"
-            STATUS_COLOR="yellow"
-          fi
-          echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
-          echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
-          echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
-          echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
+        run: generate-api-test-results-badge
 
       - name: Create API Test Results badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: API Tests
-          status: ${{ env.API_TEST_RESULTS }}
-          color: ${{ env.STATUS_COLOR }}
-          path: api-tests-badge.svg
+        run: create-api-test-results-badge
 
       - name: Upload API Tests Badge to Gist
-        if: github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: api-tests-badge.svg
+        run: upload-api-tests-badge-to-gist
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
@@ -173,15 +115,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Run API Tests with Postman
+        run: run-postman-tests
         env:
           POSTMAN_ENVIRONMENT_ISON: ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}
-        run: | 
-            cd ./api/api_tests2/
-            echo "$POSTMAN_ENVIRONMENT_ISON" > postman_environment.json
-            newman --version
-            newman run postman_collection.json --environment postman_environment.json  \
-             --reporters cli,junit --reporter-junit-export newman_report.xml
+
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
@@ -201,20 +140,106 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
+
       - name: Install Node JS
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Install dependencies
-        working-directory: ./api/api_tests3
-        run: npm ci
+        run: install-dependencies
+
       - name: Run tests
-        working-directory: ./api/api_tests3
-        run: npm test
+        run: run-typescript-tests
+
       - name: Upload test reports
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: axios-test-report
           path: ./api/api_tests3/mochawesome-report
           retention-days: 10
+
+commands:
+  install-dependencies: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+
+  run-unit-tests: |
+    nose2 -v --with-coverage unit_tests
+    coverage json -o coverage.json  # Generate JSON coverage report
+
+  send-reports-to-grafana: |
+    python send_metrics_to_influxdb.py --commit "${{ github.event.head_commit.message }}" --author "${{ github.event.pusher.name }}" --path_to_junit_reports "reports/junit-report.xml" --test_level "unit"
+
+  setup-coverage-and-badge-color: |
+    cd unit_tests && sh ci_count_coverage.sh
+
+  create-test-results-badge: |
+    emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+    with:
+      label: Tests
+      status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
+      color: ${{ env.COVERAGE_BADGE_COLOR }}
+      path: tests-badge.svg
+
+  create-coverage-badge: |
+    emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+    with:
+      label: Coverage
+      status: '${{ env.COVERAGE_PERCENTAGE }}%'
+      color: ${{ env.COVERAGE_BADGE_COLOR }}
+      path: coverage-badge.svg
+
+  upload-tests-badge-to-gist: |
+    andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+    with:
+      token: ${{ secrets.GIST_TOKEN }}
+      gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+      file: tests-badge.svg
+
+  upload-coverage-badge-to-gist: |
+    andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+    with:
+      token: ${{ secrets.GIST_TOKEN }}
+      gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+      file: coverage-badge.svg
+
+  run-api-tests: |
+    pytest api/api_tests/ --json-report --json-report-file=api-test-results.json
+
+  generate-api-test-results-badge: |
+    JSON_FILE="api-test-results.json"
+    if [ -f "$JSON_FILE" ]; then
+      TESTS=$(jq -r '.summary.total' $JSON_FILE)
+      PASSED=$(jq -r '.summary.passed' $JSON_FILE)
+      FAILED=$(jq -r '.summary.failed' $JSON_FILE)
+      STATUS="passed"
+      if [ "$FAILED" -ne "0" ]; then
+        STATUS="failed"
+        STATUS_COLOR="red"
+      else
+        STATUS_COLOR="green"
+      fi
+      echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
+    else
+      echo "Tests: N/A, Status: N/A"
+      STATUS_COLOR="yellow"
+    fi
+    echo "API_TEST_STATUS=$STATUS" >> $GITHUB_ENV
+    echo "API_TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
+    echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+    echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
+
+  create-api-test-results-badge: |
+    emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+    with:
+      label: API Tests
+      status: ${{ env.API_TEST_RESULTS }}
+      color: ${{ env.STATUS_COLOR }}
+      path: api-tests-badge.svg
+
+  upload-api-tests-badge-to-gist: |
+    andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+    with:
+      token: ${{ secrets.GIST_TOKEN }}
+      gistURL: https://gist.github.com/safo-bora/fba1dd06d94a
