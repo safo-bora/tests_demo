@@ -3,7 +3,24 @@ name: Upload Badge to Gist
 on:
   workflow_call:
     inputs:
-      file:
+      json_file:
+        description: 'The JSON file with test results'
+        required: true
+        type: string
+      label:
+        description: 'The label for the badge'
+        required: true
+        type: string
+      badge_path:
+        description: 'The path for the generated badge'
+        required: true
+        type: string
+      gist_url:
+        description: 'The URL of the Gist to upload the badge to'
+        required: true
+        type: string
+      gist_token:
+        description: 'The token for Gist authentication'
         required: true
         type: string
 
@@ -12,9 +29,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Upload Badge to Gist
+      - name: Generate Test Results badge
+        run: |
+          JSON_FILE="${{ inputs.json_file }}"
+          if [ -f "$JSON_FILE" ]; then
+            TESTS=$(jq -r '.summary.total' $JSON_FILE)
+            PASSED=$(jq -r '.summary.passed' $JSON_FILE)
+            FAILED=$(jq -r '.summary.failed' $JSON_FILE)
+            STATUS="passed"
+            if [ "$FAILED" -ne "0" ]; then
+              STATUS="failed"
+              STATUS_COLOR="red"
+            else
+              STATUS_COLOR="green"
+            fi
+            echo "Tests: $TESTS, Passed: $PASSED, Failed: $FAILED, Status: $STATUS"
+          else
+            echo "Tests: N/A, Status: N/A"
+            STATUS_COLOR="yellow"
+          fi
+          echo "TEST_STATUS=$STATUS" >> $GITHUB_ENV
+          echo "TEST_RESULTS=Tests: $TESTS, Status: $STATUS" >> $GITHUB_ENV
+          echo "STATUS_COLOR=$STATUS_COLOR" >> $GITHUB_ENV
+          echo "DEBUG: STATUS_COLOR is set to $STATUS_COLOR"
+
+      - name: Create Test Results badge
+        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+        with:
+          label: ${{ inputs.label }}
+          status: ${{ env.TEST_RESULTS }}
+          color: ${{ env.STATUS_COLOR }}
+          path: ${{ inputs.badge_path }}
+
+      - name: Upload Test Results Badge to Gist
         uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
         with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: ${{ inputs.file }}
+          token: ${{ inputs.gist_token }}
+          gistURL: ${{ inputs.gist_url }}
+          file: ${{ inputs.badge_path }}
+
