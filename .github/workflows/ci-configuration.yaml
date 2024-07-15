@@ -9,17 +9,14 @@ jobs:
   unit-testing:
     runs-on: ubuntu-latest
     environment: AWS
-    strategy:
-      matrix:
-        python-version: [3.12]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.12
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
 
       - name: Install dependencies
         run: |
@@ -106,17 +103,14 @@ jobs:
     needs: unit-testing
     runs-on: ubuntu-latest
     environment: trello
-    strategy:
-      matrix:
-        python-version: [3.12]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.12
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
 
       - name: Install dependencies
         run: |
