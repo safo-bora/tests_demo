@@ -14,7 +14,7 @@ jobs:
         python-version: [3.12]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -111,7 +111,7 @@ jobs:
         python-version: [3.12]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -183,12 +183,13 @@ jobs:
           file: api-tests-badge.svg
 
       - name: Upload test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: python-requests-test-report
           path: |
             reports/test-report.html
             reports/test-results.xml
+          retention-days: 10
 
   api-testing-postman:
     needs: unit-testing
@@ -196,7 +197,7 @@ jobs:
     environment: trello
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run API Tests with Postman
         env:
           POSTMAN_ENVIRONMENT_ISON: ${{ secrets.POSTMAN_ENVIRONMENT_ISON }}
@@ -207,9 +208,38 @@ jobs:
             newman run postman_collection.json --environment postman_environment.json  \
              --reporters cli,junit --reporter-junit-export newman_report.xml
       - name: Upload test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: postman-test-report
           path: |
             newman_report.xml
+          retention-days: 10
 
+  api-testing-typescript-axios:
+    needs: unit-testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: trello
+    env:
+      TRELLO_API_KEY: ${{ secrets.API_KEY }}
+      TRELLO_API_TOKEN: ${{ secrets.TOKEN }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install Node JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        working-directory: ./api/api_tests3
+        run: npm ci
+      - name: Run tests
+        working-directory: ./api/api_tests3
+        run: npm test
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axios-test-report
+          path: ./api/api_tests3/mochawesome-report
+          retention-days: 10
