@@ -41,7 +41,3 @@ jobs:
           author: "${{ github.event.pusher.name }}"
           path_to_junit_reports: "reports/junit-report.xml"
           test_level: "unit"
-
-
-          path: ./api/api_tests3/mochawesome-report
-          retention-days: 10
