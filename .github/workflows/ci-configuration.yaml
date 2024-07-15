@@ -41,44 +41,45 @@ jobs:
           author: "${{ github.event.pusher.name }}"
           path_to_junit_reports: "reports/junit-report.xml"
           test_level: "unit"
-      - name: Set up Coverage and Badge Color
-        run: cd unit_tests && sh ci_count_coverage.sh
+        secrets: inherit  
+      # - name: Set up Coverage and Badge Color
+      #   run: cd unit_tests && sh ci_count_coverage.sh
 
-      - name: Create Test Results badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: Tests
-          status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
-          color: ${{ env.COVERAGE_BADGE_COLOR }}
-          path: tests-badge.svg
+      # - name: Create Test Results badge
+      #   uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+      #   with:
+      #     label: Tests
+      #     status: '${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-results.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-results.outputs.json ).conclusion }}'
+      #     color: ${{ env.COVERAGE_BADGE_COLOR }}
+      #     path: tests-badge.svg
 
-      - name: Create Coverage badge
-        uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
-        with:
-          label: Coverage
-          status: '${{ env.COVERAGE_PERCENTAGE }}%'
-          color: ${{ env.COVERAGE_BADGE_COLOR }}
-          path: coverage-badge.svg
+      # - name: Create Coverage badge
+      #   uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
+      #   with:
+      #     label: Coverage
+      #     status: '${{ env.COVERAGE_PERCENTAGE }}%'
+      #     color: ${{ env.COVERAGE_BADGE_COLOR }}
+      #     path: coverage-badge.svg
 
-      - name: Upload Tests Badge to Gist
-        if: >
-          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: tests-badge.svg
+      # - name: Upload Tests Badge to Gist
+      #   if: >
+      #     github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+      #     github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+      #   uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+      #   with:
+      #     token: ${{ secrets.GIST_TOKEN }}
+      #     gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+      #     file: tests-badge.svg
 
-      - name: Upload Coverage Badge to Gist
-        if: >
-          github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
-          github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
-        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
-          file: coverage-badge.svg
+      # - name: Upload Coverage Badge to Gist
+      #   if: >
+      #     github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
+      #     github.event_name != 'workflow_run' && github.ref == 'refs/heads/main'
+      #   uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+      #   with:
+      #     token: ${{ secrets.GIST_TOKEN }}
+      #     gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+      #     file: coverage-badge.svg
           
   # api-testing-python-requests:
   #   needs: unit-testing
