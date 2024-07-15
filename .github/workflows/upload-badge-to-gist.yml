@@ -1,0 +1,20 @@
+name: Upload Badge to Gist
+
+on:
+  workflow_call:
+    inputs:
+      file:
+        required: true
+        type: string
+
+jobs:
+  upload-badge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Upload Badge to Gist
+        uses: andymckay/append-gist-action@6e8d64427fe47cbacf4ab6b890411f1d67c07f3e
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
+          file: ${{ inputs.file }}
