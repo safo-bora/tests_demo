@@ -28,20 +28,19 @@ jobs:
           nose2 -v --with-coverage unit_tests
           coverage json -o coverage.json  # Generate JSON coverage report
 
-      - name: Publish Test Results
+      - name: Publish Test Results (This GitHub Action analyses test result files and publishes the results on GitHub)
         uses: EnricoMi/publish-unit-test-result-action@v2
         id: test-results
         if: always()
         with:
           files: "reports/*.xml"
-      - name: Send reports to Grafana (optional step just to verify setup)
-        if: always()
-        run: python send_metrics_to_influxdb.py --commit "${{ github.event.head_commit.message }}" --author "${{ github.event.pusher.name }}" --path_to_junit_reports "reports/junit-report.xml" --test_level "unit"
-        env:
-          INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
-          ORGANIZATION: ${{ secrets.ORGANIZATION }}
+      - name: Call Send Reports to Grafana
+        uses: ./.github/workflows/send-reports-to-grafana.yml
+        with:
+          commit: "${{ github.event.head_commit.message }}"
+          author: "${{ github.event.pusher.name }}"
+          path_to_junit_reports: "reports/junit-report.xml"
+          test_level: "unit"
       - name: Set up Coverage and Badge Color
         run: cd unit_tests && sh ci_count_coverage.sh
 
