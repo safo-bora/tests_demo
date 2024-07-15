@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cd ..
-pwd
-ls -la 
 
 # Calculate coverage percentage
 COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
