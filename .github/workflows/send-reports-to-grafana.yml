@@ -1,0 +1,30 @@
+name: Send Reports to Grafana
+
+on:
+  workflow_call:
+    inputs:
+      commit:
+        required: true
+        type: string
+      author:
+        required: true
+        type: string
+      path_to_junit_reports:
+        required: true
+        type: string
+      test_level:
+        required: true
+        type: string
+
+jobs:
+  send-reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send reports to Grafana
+        run: python send_metrics_to_influxdb.py --commit "${{ inputs.commit }}" --author "${{ inputs.author }}" --path_to_junit_reports "${{ inputs.path_to_junit_reports }}" --test_level "${{ inputs.test_level }}"
+        env:
+          INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
+          ORGANIZATION: ${{ secrets.ORGANIZATION }}
