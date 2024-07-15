@@ -42,27 +42,8 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
           ORGANIZATION: ${{ secrets.ORGANIZATION }}
-      - name: Set coverage output variable
-        run: |
-          cat coverage.json
-          COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(data.get('totals', {}).get('percent_covered', 0))")
-          echo "Extracted COVERAGE value: $COVERAGE"  # Add this line for debugging
-          if [ -z "$COVERAGE" ]; then
-            COVERAGE=0  # Set default value to 0 if coverage is not available
-          fi
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-
-          # Extract the numeric value from COVERAGE using sed
-          COVERAGE_NUMERIC=$(echo "$COVERAGE" | sed 's/"//g')
-
-          COVERAGE_PERCENTAGE=$(printf "%.2f" "$COVERAGE_NUMERIC")
-          echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_ENV
-
-          if (( $(echo "$COVERAGE_PERCENTAGE < 85" | bc -l) )); then
-            echo "COVERAGE_BADGE_COLOR=red" >> $GITHUB_ENV
-          else
-            echo "COVERAGE_BADGE_COLOR=green" >> $GITHUB_ENV
-          fi
+      - name: Set up Coverage and Badge Color
+        run: sh setup-coverage.sh
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
