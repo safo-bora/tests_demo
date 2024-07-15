@@ -43,7 +43,7 @@ jobs:
           INFLUX_DB_URL: ${{ secrets.INFLUX_DB_URL }}
           ORGANIZATION: ${{ secrets.ORGANIZATION }}
       - name: Set up Coverage and Badge Color
-        run: sh setup-coverage.sh
+        run: sh ci_count_coverage.sh
 
       - name: Create Test Results badge
         uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8
@@ -80,6 +80,7 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
           gistURL: https://gist.github.com/safo-bora/fba1dd06d94a6c3166f557a425fc1c5c
           file: coverage-badge.svg
+          
   api-testing-python-requests:
     needs: unit-testing
     runs-on: ubuntu-latest
