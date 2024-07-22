@@ -3,7 +3,7 @@ name: Run Testing
 on:
   push:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * 1' # At 00:00, only on Monday
 
 jobs:
   unit-testing:
